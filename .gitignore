@@ -1,0 +1,14 @@
+# .NET build output
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# DocFX output. The API reference (docs/api/*.yml) is generated from the XML doc comments at build time.
+docs/_site/
+docs/api/*.yml
+docs/api/.manifest
+
+# Cookies written by the examples (Client.SaveCookies)
+cookies.json

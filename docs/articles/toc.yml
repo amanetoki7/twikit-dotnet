@@ -1,0 +1,12 @@
+- name: はじめに
+  href: getting-started.md
+- name: Python 版との対応
+  href: python-differences.md
+- name: X スペース
+  href: spaces.md
+- name: レート制限
+  href: ratelimits.md
+- name: アカウントを守るために
+  href: protect-account.md
+- name: エラーとエラーコード
+  href: errors.md

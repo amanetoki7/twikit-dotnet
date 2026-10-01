@@ -1,0 +1,48 @@
+# DocFX で docs/ の日本語ドキュメント（ガイド + API リファレンス）をビルドし、GitHub Pages に公開する。
+# 公開するにはリポジトリの Settings → Pages → Source を "GitHub Actions" にしておく。
+name: docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "docs/**"
+      - "Directory.Build.props"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Install docfx
+        run: dotnet tool update -g docfx
+      - name: Build documentation
+        run: docfx docs/docfx.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

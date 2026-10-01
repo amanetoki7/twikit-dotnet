@@ -1,0 +1,1402 @@
+[
+ {
+  "value": 78,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 151
+ },
+ {
+  "value": 122,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 224,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 186,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 157,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 32,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 16,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 203,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 298.82
+ },
+ {
+  "value": 141,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 27
+ },
+ {
+  "value": 12,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 208,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 304.71
+ },
+ {
+  "value": 80,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 112
+ },
+ {
+  "value": 153,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 216
+ },
+ {
+  "value": 146,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 206.12
+ },
+ {
+  "value": 115,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 161.8
+ },
+ {
+  "value": 49,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 117
+ },
+ {
+  "value": 214,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 10.49
+ },
+ {
+  "value": 48,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 67
+ },
+ {
+  "value": 178,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.4
+ },
+ {
+  "value": 96,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": -1
+ },
+ {
+  "value": 136,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.53
+ },
+ {
+  "value": 175,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 247
+ },
+ {
+  "value": 103,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 63,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.51
+ },
+ {
+  "value": 50,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.2
+ },
+ {
+  "value": 17,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 80.0
+ },
+ {
+  "value": 93,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 38.48
+ },
+ {
+  "value": 110,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 189
+ },
+ {
+  "value": 235,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 211,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 11
+ },
+ {
+  "value": 219,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 309
+ },
+ {
+  "value": 10,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 93,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 169
+ },
+ {
+  "value": 28,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 92
+ },
+ {
+  "value": 10,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 14.12
+ },
+ {
+  "value": 31,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.76
+ },
+ {
+  "value": 71,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 99.51
+ },
+ {
+  "value": 208,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 11.87
+ },
+ {
+  "value": 186,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 262.32
+ },
+ {
+  "value": 17,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 24
+ },
+ {
+  "value": 144,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 202
+ },
+ {
+  "value": 222,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 321.18
+ },
+ {
+  "value": 90,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 39
+ },
+ {
+  "value": 106,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.17
+ },
+ {
+  "value": 177,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 249.58
+ },
+ {
+  "value": 59,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 176,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 3,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 59
+ },
+ {
+  "value": 153,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.6
+ },
+ {
+  "value": 124,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 175.06
+ },
+ {
+  "value": 188,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 265
+ },
+ {
+  "value": 139,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 59,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 46
+ },
+ {
+  "value": 104,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": -1
+ },
+ {
+  "value": 81,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 155.29
+ },
+ {
+  "value": 40,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 189,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 266
+ },
+ {
+  "value": 255,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 360
+ },
+ {
+  "value": 135,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 190.59
+ },
+ {
+  "value": 129,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.51
+ },
+ {
+  "value": 236,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.85
+ },
+ {
+  "value": 55,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": -1
+ },
+ {
+  "value": 16,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 22
+ },
+ {
+  "value": 128,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 193,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 65,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": -1
+ },
+ {
+  "value": 7,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 68
+ },
+ {
+  "value": 56,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": -1
+ },
+ {
+  "value": 86,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.34
+ },
+ {
+  "value": 163,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 251
+ },
+ {
+  "value": 59,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 83
+ },
+ {
+  "value": 180,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 253.82
+ },
+ {
+  "value": 249,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.95
+ },
+ {
+  "value": 76,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 142,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 200
+ },
+ {
+  "value": 11,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 57
+ },
+ {
+  "value": 119,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 168.0
+ },
+ {
+  "value": 171,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 241
+ },
+ {
+  "value": 195,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 212,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 309.41
+ },
+ {
+  "value": 26,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.8
+ },
+ {
+  "value": 197,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 291.76
+ },
+ {
+  "value": 212,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 309
+ },
+ {
+  "value": 121,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 170.3
+ },
+ {
+  "value": 137,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 221.18
+ },
+ {
+  "value": 34,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 100
+ },
+ {
+  "value": 82,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 115.76
+ },
+ {
+  "value": 39,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 105
+ },
+ {
+  "value": 145,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 230.59
+ },
+ {
+  "value": 176,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 248.16
+ },
+ {
+  "value": 225,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 317
+ },
+ {
+  "value": 78,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.31
+ },
+ {
+  "value": 114,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 33.62
+ },
+ {
+  "value": 78,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 41
+ },
+ {
+  "value": 14,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 18.82
+ },
+ {
+  "value": 214,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 301
+ },
+ {
+  "value": 99,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 139
+ },
+ {
+  "value": 144,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.56
+ },
+ {
+  "value": 5,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.02
+ },
+ {
+  "value": 1,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 182,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 256.65
+ },
+ {
+  "value": 156,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 220.24
+ },
+ {
+  "value": 96,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.25
+ },
+ {
+  "value": 146,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 26.22
+ },
+ {
+  "value": 88,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 123
+ },
+ {
+  "value": 136,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.07
+ },
+ {
+  "value": 80,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.31
+ },
+ {
+  "value": 237,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.86
+ },
+ {
+  "value": 95,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.37
+ },
+ {
+  "value": 52,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 121
+ },
+ {
+  "value": 71,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 99
+ },
+ {
+  "value": 122,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 20,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 28.24
+ },
+ {
+  "value": 11,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.04
+ },
+ {
+  "value": 108,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 187.06
+ },
+ {
+  "value": 191,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 15.81
+ },
+ {
+  "value": 197,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 277
+ },
+ {
+  "value": 230,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.8
+ },
+ {
+  "value": 187,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 16.73
+ },
+ {
+  "value": 140,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 224
+ },
+ {
+  "value": 78,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.39
+ },
+ {
+  "value": 242,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 4.01
+ },
+ {
+  "value": 105,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 9,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 12
+ },
+ {
+  "value": 171,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 241
+ },
+ {
+  "value": 37,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 103
+ },
+ {
+  "value": 176,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.38
+ },
+ {
+  "value": 128,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 180
+ },
+ {
+  "value": 206,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 290
+ },
+ {
+  "value": 86,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 121.41
+ },
+ {
+  "value": 246,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 347
+ },
+ {
+  "value": 54,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 47
+ },
+ {
+  "value": 24,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 33
+ },
+ {
+  "value": 244,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 344.43
+ },
+ {
+  "value": 255,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 1
+ },
+ {
+  "value": 207,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.81
+ },
+ {
+  "value": 156,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 243.53
+ },
+ {
+  "value": 128,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.5
+ },
+ {
+  "value": 169,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 104,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 146
+ },
+ {
+  "value": 193,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 287
+ },
+ {
+  "value": 201,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.58
+ },
+ {
+  "value": 25,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 54
+ },
+ {
+  "value": 25,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 35
+ },
+ {
+  "value": 163,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 230
+ },
+ {
+  "value": 49,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 68.37
+ },
+ {
+  "value": 148,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 208
+ },
+ {
+  "value": 139,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 223.53
+ },
+ {
+  "value": 239,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 4.7
+ },
+ {
+  "value": 155,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.22
+ },
+ {
+  "value": 30,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 53
+ },
+ {
+  "value": 135,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 190
+ },
+ {
+  "value": 231,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.91
+ },
+ {
+  "value": 20,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 28.24
+ },
+ {
+  "value": 31,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 42
+ },
+ {
+  "value": 155,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 246,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 212,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 299
+ },
+ {
+  "value": 64,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 45
+ },
+ {
+  "value": 186,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.46
+ },
+ {
+  "value": 53,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 74
+ },
+ {
+  "value": 191,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 269.4
+ },
+ {
+  "value": 165,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.29
+ },
+ {
+  "value": 148,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 208
+ },
+ {
+  "value": 88,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 124.24
+ },
+ {
+  "value": 23,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 31
+ },
+ {
+  "value": 86,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 40
+ },
+ {
+  "value": 169,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 238.25
+ },
+ {
+  "value": 252,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 356.47
+ },
+ {
+  "value": 162,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 250
+ },
+ {
+  "value": 182,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 274
+ },
+ {
+  "value": 37,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 103
+ },
+ {
+  "value": 232,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 327.53
+ },
+ {
+  "value": 81,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 41
+ },
+ {
+  "value": 59,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.54
+ },
+ {
+  "value": 126,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.49
+ },
+ {
+  "value": 238,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 340
+ },
+ {
+  "value": 53,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 74.82
+ },
+ {
+  "value": 13,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 75.29
+ },
+ {
+  "value": 150,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 150,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 153,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 216
+ },
+ {
+  "value": 41,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 108
+ },
+ {
+  "value": 145,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.14
+ },
+ {
+  "value": 246,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.93
+ },
+ {
+  "value": 145,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.14
+ },
+ {
+  "value": 26,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 53.98
+ },
+ {
+  "value": 55,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": false,
+  "result": 124.71
+ },
+ {
+  "value": 37,
+  "min": 60.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 51
+ },
+ {
+  "value": 122,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 171
+ },
+ {
+  "value": 229,
+  "min": 0.0,
+  "max": 1.0,
+  "rounding": true,
+  "result": 0
+ },
+ {
+  "value": 202,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.58
+ },
+ {
+  "value": 193,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": 0.51
+ },
+ {
+  "value": 115,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 195
+ },
+ {
+  "value": 178,
+  "min": 0.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 251
+ },
+ {
+  "value": 142,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 227
+ },
+ {
+  "value": 190,
+  "min": -1.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 267
+ },
+ {
+  "value": 178,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 269
+ },
+ {
+  "value": 93,
+  "min": -1.0,
+  "max": 1.0,
+  "rounding": false,
+  "result": -0.27
+ },
+ {
+  "value": 91,
+  "min": 60.0,
+  "max": 360.0,
+  "rounding": true,
+  "result": 167
+ }
+]

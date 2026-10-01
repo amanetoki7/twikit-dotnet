@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Twikit</RootNamespace>
+    <AssemblyName>Twikit</AssemblyName>
+    <PackageId>Twikit</PackageId>
+    <Version>2.4.0</Version>
+    <Authors>twikit contributors</Authors>
+    <Description>Twitter/X API scraper for .NET with no API key required (C# port of twikit with the 2026 fixes and X Spaces support).</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/amanetoki7/twikit-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/amanetoki7/twikit-dotnet</RepositoryUrl>
+    <PackageTags>twitter;x;scraper;twikit;spaces;no-api-key</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: every public member does not need its own XML comment. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- HTML parsing for the X-Client-Transaction-Id handshake and the unlock page (BeautifulSoup + lxml in the Python original). -->
+    <PackageReference Include="AngleSharp" Version="1.8.2" />
+    <!-- JavaScript interpreter for the obfuscated ui_metrics challenge (js2py in the Python original). -->
+    <PackageReference Include="Jint" Version="4.16.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Twikit.Tests" />
+  </ItemGroup>
+
+</Project>
