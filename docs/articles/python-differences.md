@@ -24,6 +24,9 @@ C# 版は Python 版（`twikit` 2.4.0）の構造をそのまま移植してい�
 | `result.next()` / `result.previous()` | `result.NextAsync()` / `result.PreviousAsync()` |
 | `tweet.text` / `tweet.full_text` / `tweet.user` | `tweet.Text` / `tweet.FullText` / `tweet.User` |
 | `tweet.created_at_datetime` | `tweet.CreatedAtDatetime`（`DateTimeOffset`） |
+| `client.highlight_tweet(id)` / `unhighlight_tweet(id)` | `client.HighlightTweetAsync(id)` / `client.UnhighlightTweetAsync(id)` |
+| `client.is_tweet_highlighted(id)` | `client.IsTweetHighlightedAsync(id)` |
+| `tweet.highlighted` / `await tweet.is_highlighted()` | `tweet.Highlighted`（`bool?`）/ `await tweet.IsHighlightedAsync()` |
 | `twikit.List` | `TwitterList`（`System.Collections.Generic.List<T>` との混同を避けるため） |
 | `twikit.build_query(text, options)` | `SearchQuery.Build(text, new SearchOptions { ... })` |
 | `twikit.streaming.Topic.dm_update(id)` | `Twikit.Streaming.Topic.DmUpdate(id)` |

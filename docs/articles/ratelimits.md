@@ -26,6 +26,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | ChangeGroupNameAsync                      | 900   | {GroupID}/update_name.json          |
 | GetGroupDmHistoryAsync, GetDmHistoryAsync | 900   | conversation/{ConversationID}.json  |
 | BookmarkTweetAsync                        | -     | CreateBookmark                      |
+| HighlightTweetAsync                       | -     | CreateHighlight                     |
 | CreatePollAsync                           | -     | cards/create.json                   |
 | FollowUserAsync                           | 15    | friendships/create.json             |
 | CreateListAsync                           | -     | CreateList                          |
@@ -33,6 +34,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | CreateScheduledTweetAsync                 | -     | CreateScheduledTweet                |
 | CreateTweetAsync                          | 300*  | CreateTweet                         |
 | DeleteBookmarkAsync                       | -     | DeleteBookmark                      |
+| UnhighlightTweetAsync                     | -     | DeleteHighlight                     |
 | DeleteDmAsync                             | -     | DMMessageDeleteMutation             |
 | DeleteListBannerAsync                     | -     | DeleteListBanner                    |
 | DeleteRetweetAsync                        | -     | DeleteRetweet                       |
@@ -46,6 +48,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | GetUserFollowersAsync                     | 50    | Followers                           |
 | GetUserFollowersYouKnowAsync              | 500   | FollowersYouKnow                    |
 | GetUserFollowingAsync                     | 500   | Following                           |
+| IsTweetHighlightedAsync                   | -     | HighlightTweetSheetQuery            |
 | GetLatestTimelineAsync                    | 500   | HomeLatestTimeline                  |
 | GetTimelineAsync                          | 500   | HomeTimeline                        |
 | -                                         | 450   | dm/inbox_initial_state.json         |
@@ -78,6 +81,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | UploadMediaAsync                          | -     | media/upload.json                   |
 | GetUserByIdAsync                          | 500   | UserByRestId                        |
 | GetUserByScreenNameAsync                  | 95    | UserByScreenName                    |
+| GetUserHighlightsTweetsAsync              | -     | UserHighlightsTweets                |
 | GetUserTweetsAsync(..., "Likes")          | 500   | Likes                               |
 | GetUserTweetsAsync(..., "Media")          | 500   | UserMedia                           |
 | GetUserTweetsAsync(..., "Tweets")         | 50    | UserTweets                          |

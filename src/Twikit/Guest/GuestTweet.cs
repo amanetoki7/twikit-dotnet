@@ -32,6 +32,11 @@ public sealed class GuestTweet : IEquatable<GuestTweet>
     public JsonObject? PlaceData { get; }
     public int BookmarkCount { get; }
     public bool Bookmarked { get; }
+    /// <summary>
+    /// 投稿者の「ハイライト」タブに入っているか。<see cref="GuestClient.GetUserHighlightsTweetsAsync"/> で取得したツイートだけ true になり、
+    /// それ以外は null（X はタイムラインにこのフラグを含めません）。
+    /// </summary>
+    public bool? Highlighted { get; internal set; }
     public List<string> EditTweetIds { get; }
     public long? EditableUntilMsecs { get; }
     public bool IsTranslatable { get; }
@@ -77,6 +82,7 @@ public sealed class GuestTweet : IEquatable<GuestTweet>
         PlaceData = legacy.Obj("place");
         BookmarkCount = legacy.IntOr("bookmark_count", 0);
         Bookmarked = legacy.BoolOr("bookmarked", false);
+        Highlighted = data.Sub("highlights_info").Bool("highlighted");
         var editControl = data.Sub("edit_control");
         EditTweetIds = editControl.Arr("edit_tweet_ids").Strings();
         EditableUntilMsecs = editControl.Long("editable_until_msecs");

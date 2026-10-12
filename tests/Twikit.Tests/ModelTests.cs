@@ -355,4 +355,19 @@ public class ModelTests
         Assert.False(parsed.StartButton);
         Assert.Equal("BLOB123", parsed.Blob);
     }
+
+    [Fact]
+    public void TweetHighlightedIsUnknownUntilStamped()
+    {
+        // No timeline document carries `highlights_info`, so absence must read as unknown, not false.
+        var tweet = Tweet.FromData(DummyClient, JsonNode.Parse(SampleTweetEntry))!;
+        Assert.Null(tweet.Highlighted);
+        tweet.SetHighlighted(true);
+        Assert.True(tweet.Highlighted);
+        tweet.SetHighlighted(false);
+        Assert.False(tweet.Highlighted);
+
+        var stamped = Tweet.FromData(DummyClient, JsonNode.Parse("""{"result":{"rest_id":"9","highlights_info":{"highlighted":true},"core":{"user_results":{"result":{"rest_id":"1"}}},"legacy":{"full_text":"t"}}}"""))!;
+        Assert.True(stamped.Highlighted);
+    }
 }

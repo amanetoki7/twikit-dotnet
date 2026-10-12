@@ -165,6 +165,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.GetDmInboxAsync()`、`CreateGroupAsync()`、`DeleteDmConversationAsync()` — DM の受信箱一覧、グループ作成、会話の削除。
 - `Client.UpdateProfileAsync()`、`GetAboutAccountAsync()`、`GetUserSpotlightsAsync()`、`GetUserListsAsync()`、`GetMutedUsersAsync()`、`GetBlockedUsersAsync()`。
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
+- `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` と `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — プロフィールの「ハイライト」タブへの追加・解除と、ハイライト済みかの確認（Premium 限定）。X はタイムラインにこのフラグを含めないため、`Tweet.Highlighted` は `GetUserHighlightsTweetsAsync()` で取得したツイートか、`IsHighlightedAsync()` を呼んだあとだけ値が入ります。`GetUserHighlightsTweetsAsync()` の query id / features も 2026-10 時点のものへ更新しました。
 - `SearchOptions` / `SearchQuery.Build` — 検索クエリの組み立て。
 - `Article`、`Conversation` — 長文記事と DM の会話。
 - `Twikit.Spaces` 名前空間 — スペース関連のクラス群（`Spaces`、`Space`、`SpaceChat`、`SpaceVoiceSession` など）。

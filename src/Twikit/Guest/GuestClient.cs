@@ -292,7 +292,11 @@ public sealed class GuestClient : IRequestClient, IRawHttpSession, IDisposable
             if (entryId.StartsWith("tweet", StringComparison.Ordinal))
             {
                 var tweet = GuestTweet.FromData(this, entry);
-                if (tweet is not null) results.Add(tweet);
+                if (tweet is null) continue;
+                // Everything on this timeline is highlighted by definition; X does
+                // not stamp the entries, so record it here.
+                tweet.Highlighted = true;
+                results.Add(tweet);
             }
             else if (entryId.StartsWith("cursor-top", StringComparison.Ordinal)) previousCursor = entry.Sub("content").Str("value");
             else if (entryId.StartsWith("cursor-bottom", StringComparison.Ordinal)) nextCursor = entry.Sub("content").Str("value");

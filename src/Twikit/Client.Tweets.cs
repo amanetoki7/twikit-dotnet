@@ -149,7 +149,7 @@ public partial class Client
         return results;
     }
 
-    /// <summary>ユーザーのハイライトツイートを取得します。</summary>
+    /// <summary>ユーザーのハイライトツイートを取得します。各ツイートの <see cref="Tweet.Highlighted"/> は true になります。</summary>
     public async Task<Result<Tweet>> GetUserHighlightsTweetsAsync(string userId, int count = 20, string? cursor = null)
     {
         var response = await Gql.UserHighlightsTweetsAsync(userId, count, cursor).ConfigureAwait(false);
@@ -167,7 +167,12 @@ public partial class Client
             if (entryId.StartsWith("tweet", StringComparison.Ordinal))
             {
                 var tweet = Tweet.FromData(this, entry);
-                if (tweet is not null) results.Add(tweet);
+                if (tweet is null) continue;
+                // Everything on this timeline is highlighted by definition, and X
+                // does not stamp the entries individually, so this is the one place
+                // the flag is known without a second request.
+                tweet.SetHighlighted(true);
+                results.Add(tweet);
             }
             else if (entryId.StartsWith("cursor-top", StringComparison.Ordinal))
                 previousCursor = entry.Sub("content").Str("value");
@@ -980,6 +985,88 @@ public partial class Client
     /// <summary>ツイートをブックマークから削除します。</summary>
     public async Task<HttpResponseMessage> DeleteBookmarkAsync(string tweetId)
         => (await Gql.DeleteBookmarkAsync(tweetId).ConfigureAwait(false)).Http;
+
+    /// <summary>
+    /// ツイートをプロフィールの「ハイライト」タブに追加します。
+    /// </summary>
+    /// <remarks>
+    /// ハイライトは Premium 機能です。自分のツイートで、かつ有効なサブスクリプションが必要で、それ以外は X が拒否します。
+    /// Web クライアントと同じく、<c>tweet_highlights_put.success</c> が true でなければ失敗として扱います。
+    /// </remarks>
+    /// <param name="tweetId">ハイライトするツイートの ID。</param>
+    /// <exception cref="TwitterException">
+    /// X が変更を確認しなかった — Premium でない、自分のツイートでない、または応答に <c>success: true</c> が無い。
+    /// </exception>
+    /// <seealso cref="UnhighlightTweetAsync"/>
+    /// <seealso cref="IsTweetHighlightedAsync"/>
+    /// <seealso cref="GetUserHighlightsTweetsAsync"/>
+    public async Task<HttpResponseMessage> HighlightTweetAsync(string tweetId)
+    {
+        var response = await Gql.CreateHighlightAsync(tweetId).ConfigureAwait(false);
+        CheckHighlightResponse(response, "tweet_highlights_put");
+        return response.Http;
+    }
+
+    /// <summary>ツイートをプロフィールの「ハイライト」タブから外します。</summary>
+    /// <param name="tweetId">ハイライトを解除するツイートの ID。</param>
+    /// <exception cref="TwitterException">X が変更を確認しなかった（<see cref="HighlightTweetAsync"/> を参照）。</exception>
+    public async Task<HttpResponseMessage> UnhighlightTweetAsync(string tweetId)
+    {
+        var response = await Gql.DeleteHighlightAsync(tweetId).ConfigureAwait(false);
+        CheckHighlightResponse(response, "tweet_highlights_delete");
+        return response.Http;
+    }
+
+    private static void CheckHighlightResponse(ApiResponse response, string key)
+    {
+        // The web client treats anything but `{key: {"success": true}}` as a
+        // failure, so do the same rather than hand back a 200 that changed
+        // nothing. A refusal can arrive as an `errors` entry next to a `data`
+        // that lacks the key.
+        var errors = JsonExtensions.FatalErrors(response.Json, key);
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new TwitterException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        var result = response.Json.Get("data").Sub(key);
+        if (result.Bool("success") != true)
+        {
+            // Measured 2026-10-12: highlighting a tweet that is not yours answers
+            // 200 with `{"message": "user can only add his own tweet", "success":
+            // false}` - no `errors` entry at all - so the reason is read from here.
+            throw new TwitterException(result.Str("message")
+                ?? $"X did not confirm the highlight change ({key}): {result.ToJsonString()}");
+        }
+    }
+
+    /// <summary>
+    /// ツイートが投稿者の「ハイライト」タブに入っているかを X に問い合わせます。
+    /// </summary>
+    /// <remarks>
+    /// Web クライアントがツイートのメニューを開いたときに走らせるクエリ（<c>HighlightTweetSheetQuery</c>）で、
+    /// X がこのフラグを返す唯一のドキュメントです。タイムラインやツイート取得には含まれないため、
+    /// <see cref="Tweet.Highlighted"/> はこのメソッド（または <see cref="Tweet.IsHighlightedAsync"/>）を呼ぶまで null のままです。
+    /// </remarks>
+    /// <param name="tweetId">ツイートの ID。</param>
+    /// <returns>ハイライト済みなら true。</returns>
+    /// <exception cref="TweetNotAvailableException">X がその ID のツイートを返さなかった（削除済み・非公開・不正な ID）。</exception>
+    public async Task<bool> IsTweetHighlightedAsync(string tweetId)
+    {
+        var response = await Gql.HighlightTweetSheetQueryAsync(tweetId).ConfigureAwait(false);
+        var errors = JsonExtensions.FatalErrors(response.Json, "highlights_info");
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new TwitterException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        var result = response.Json.Get("data").Sub("tweet_result_by_rest_id").Sub("result");
+        if (result.Obj("tweet") is JsonObject inner) result = inner;
+        var highlighted = result.Sub("highlights_info").Bool("highlighted");
+        if (highlighted is null)
+            throw new TweetNotAvailableException($"X returned no highlight state for tweet {tweetId}: {result.ToJsonString()}");
+        return highlighted.Value;
+    }
 
     /// <summary>
     /// ブックマークを取得します。

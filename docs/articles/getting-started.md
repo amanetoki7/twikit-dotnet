@@ -87,6 +87,22 @@ await client.SendDmAsync("123456789", "Hello");
 var trends = await client.GetTrendsAsync("trending");
 ```
 
+### ハイライト（Premium）
+
+プロフィールの「ハイライト」タブは Premium 機能です。X はタイムラインやツイート取得にハイライト済みかどうかを
+含めないため、`Tweet.Highlighted` は `GetUserHighlightsTweetsAsync()` で取得したツイートか、
+`IsHighlightedAsync()` / `HighlightAsync()` / `UnhighlightAsync()` を呼んだあと以外は null（不明）です。
+
+```csharp
+var tweet = await client.GetTweetByIdAsync("2103725182292820029");
+Console.WriteLine(tweet.Highlighted);                 // null: タイムライン系の応答にはフラグが無い
+Console.WriteLine(await tweet.IsHighlightedAsync());  // X に問い合わせる。tweet.Highlighted も更新される
+await tweet.HighlightAsync();                         // 自分のツイートのみ。他人のものは TwitterException
+await tweet.UnhighlightAsync();
+
+var highlights = await client.GetUserHighlightsTweetsAsync(userId);   // 全件 Highlighted == true
+```
+
 ### ページ送り（`Result<T>`）
 
 一覧を返すメソッドは [`Result<T>`](../api/Twikit.Result-1.yml) を返します。`IReadOnlyList<T>` なので

@@ -519,4 +519,84 @@ public class ClientTests
         await Assert.ThrowsAsync<ArgumentException>(() => client.GetUserMentionsAsync("1234567890"));
         await Assert.ThrowsAsync<ArgumentException>(() => client.GetTweetByUrlAsync("https://x.com/home"));
     }
+
+    [Fact]
+    public async Task HighlightsRoundTrip()
+    {
+        // Bodies are the ones X sent on 2026-10-12 (HAR capture), trimmed to the keys the code reads.
+        var highlighted = false;
+        var createBody = """{"data":{"tweet_highlights_put":{"success":true}}}""";
+        var handler = Fixtures.HandshakeHandler((request, body) =>
+        {
+            var path = request.RequestUri!.AbsolutePath;
+            var query = Uri.UnescapeDataString(request.RequestUri.Query);
+            if (path.EndsWith("/7jEc7ECTTDcNaqsMhjTxXg/CreateHighlight", StringComparison.Ordinal))
+            {
+                Assert.Equal(HttpMethod.Post, request.Method);
+                Assert.Contains("\"tweet_id\":\"42\"", body);
+                Assert.Contains("\"queryId\":\"7jEc7ECTTDcNaqsMhjTxXg\"", body);
+                if (createBody.Contains("\"success\":true")) highlighted = true;
+                return FakeHandler.Json(createBody);
+            }
+            if (path.EndsWith("/ea-VVDSLIEYNY2_2aPg3Uw/DeleteHighlight", StringComparison.Ordinal))
+            {
+                Assert.Equal(HttpMethod.Post, request.Method);
+                Assert.Contains("\"tweet_id\":\"42\"", body);
+                highlighted = false;
+                return FakeHandler.Json("""{"data":{"tweet_highlights_delete":{"success":true}}}""");
+            }
+            if (path.EndsWith("/j5-kjpQseTlPnVtfck8i_Q/HighlightTweetSheetQuery", StringComparison.Ordinal))
+            {
+                Assert.Equal(HttpMethod.Get, request.Method);
+                Assert.Contains("\"tweet_id\":\"42\"", query);
+                return FakeHandler.Json("""{"data":{"tweet_result_by_rest_id":{"id":"VHdlZXRSZXN1bHRz","result":{"__typename":"Tweet","highlights_info":{"highlighted":__H__},"id":"VHdlZXQ6"}}}}"""
+                    .Replace("__H__", highlighted ? "true" : "false"));
+            }
+            if (path.EndsWith("/Ducf_uu7enyuuE2kjOwFcw/UserHighlightsTweets", StringComparison.Ordinal))
+            {
+                Assert.Contains("\"userId\":\"1\"", query);
+                Assert.Contains("\"withPayments\":false", query);
+                Assert.Contains("\"rweb_video_screen_enabled\":false", query);
+                return FakeHandler.Json("""{"data":{"user":{"result":{"__typename":"User","timeline":{"timeline":{"instructions":[{"type":"TimelineClearCache"},{"type":"TimelineAddEntries","entries":[__E1__,__E2__,{"entryId":"cursor-top-1","content":{"value":"TOP"}},{"entryId":"cursor-bottom-1","content":{"value":"BOTTOM"}}]}]}}}}}}"""
+                    .Replace("__E1__", TweetEntry("42")).Replace("__E2__", TweetEntry("43")));
+            }
+            return FakeHandler.Json("{}", HttpStatusCode.NotFound);
+        });
+        using var client = Fixtures.NewClient(handler);
+
+        Assert.False(await client.IsTweetHighlightedAsync("42"));
+        var response = await client.HighlightTweetAsync("42");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(await client.IsTweetHighlightedAsync("42"));
+
+        var page = await client.GetUserHighlightsTweetsAsync("1", 20);
+        Assert.Equal(new[] { "42", "43" }, page.Select(t => t.Id));
+        Assert.All(page, t => Assert.True(t.Highlighted));
+        Assert.Equal("BOTTOM", page.NextCursor);
+        Assert.Equal("TOP", page.PreviousCursor);
+
+        var tweet = page[0];
+        await tweet.UnhighlightAsync();
+        Assert.False(tweet.Highlighted);
+        Assert.False(await tweet.IsHighlightedAsync());
+        await tweet.HighlightAsync();
+        Assert.True(tweet.Highlighted);
+
+        // Somebody else's tweet: X answers 200 with success:false and a message, no `errors` (measured 2026-10-12).
+        createBody = """{"data":{"tweet_highlights_put":{"message":"user can only add his own tweet","success":false}}}""";
+        var e = await Assert.ThrowsAsync<TwitterException>(() => client.HighlightTweetAsync("42"));
+        Assert.Equal("user can only add his own tweet", e.Message);
+        // A refusal shaped like the bookmark-folder one: `errors` next to an empty `data`.
+        createBody = """{"data":{},"errors":[{"code":37,"message":"User is not authorized to use highlights"}]}""";
+        e = await Assert.ThrowsAsync<TwitterException>(() => client.HighlightTweetAsync("42"));
+        Assert.Equal("User is not authorized to use highlights", e.Message);
+    }
+
+    [Fact]
+    public async Task IsTweetHighlightedRaisesWhenXReturnsNoTweet()
+    {
+        var handler = Fixtures.HandshakeHandler((_, _) => FakeHandler.Json("""{"data":{"tweet_result_by_rest_id":{"id":"x"}}}"""));
+        using var client = Fixtures.NewClient(handler);
+        await Assert.ThrowsAsync<TweetNotAvailableException>(() => client.IsTweetHighlightedAsync("1"));
+    }
 }

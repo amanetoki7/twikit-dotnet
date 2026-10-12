@@ -39,7 +39,17 @@ public static class GqlEndpoint
     public static readonly string UserTweetsAndReplies = Url("wc5DRl4VaW5lSqJ8YbftZQ/UserTweetsAndReplies");
     public static readonly string UserMedia = Url("2DC9TKrcUzwGC_QskSVl5w/UserMedia");
     public static readonly string UserLikes = Url("BEthBswU1Bt209H5xptp4Q/Likes");
-    public static readonly string UserHighlightsTweets = Url("Ijy4LdX8ZYTy1PzQn8xC4g/UserHighlightsTweets");
+    // Highlights (Premium). Query ids and variable shapes captured from the
+    // web client on 2026-10-12. The mutations take `tweet_id` alone and
+    // answer `tweet_highlights_put` / `tweet_highlights_delete` with a bare
+    // `success` flag; HighlightTweetSheetQuery is what the caret menu calls
+    // to decide between "Add to" and "Remove from Highlights", and it is the
+    // only document that reports `highlights_info.highlighted` on a tweet -
+    // none of the timeline documents carry it.
+    public static readonly string UserHighlightsTweets = Url("Ducf_uu7enyuuE2kjOwFcw/UserHighlightsTweets");
+    public static readonly string CreateHighlight = Url("7jEc7ECTTDcNaqsMhjTxXg/CreateHighlight");
+    public static readonly string DeleteHighlight = Url("ea-VVDSLIEYNY2_2aPg3Uw/DeleteHighlight");
+    public static readonly string HighlightTweetSheetQuery = Url("j5-kjpQseTlPnVtfck8i_Q/HighlightTweetSheetQuery");
     public static readonly string HomeTimeline = Url("-X_hcgQzmHGl29-UXxz4sw/HomeTimeline");
     public static readonly string HomeLatestTimeline = Url("U0cdisy7QFIoTfu3-Okw0A/HomeLatestTimeline");
     public static readonly string FavoriteTweet = Url("lI07N6Otwv1PhnEgXILM7A/FavoriteTweet");
@@ -369,8 +379,21 @@ public sealed class GqlClient
             ["withVoice"] = true,
         };
         if (cursor is not null) variables["cursor"] = cursor;
-        return GqlGetAsync(GqlEndpoint.UserHighlightsTweets, variables, Constants.UserHighlightsTweetsFeatures, _base.BaseHeaders);
+        var extra = new JsonObject
+        {
+            ["fieldToggles"] = new JsonObject { ["withPayments"] = false, ["withArticlePlainText"] = false },
+        };
+        return GqlGetAsync(GqlEndpoint.UserHighlightsTweets, variables, Constants.UserHighlightsTweetsFeatures, _base.BaseHeaders, extra);
     }
+
+    public Task<ApiResponse> CreateHighlightAsync(string tweetId)
+        => GqlPostAsync(GqlEndpoint.CreateHighlight, new JsonObject { ["tweet_id"] = tweetId });
+
+    public Task<ApiResponse> DeleteHighlightAsync(string tweetId)
+        => GqlPostAsync(GqlEndpoint.DeleteHighlight, new JsonObject { ["tweet_id"] = tweetId });
+
+    public Task<ApiResponse> HighlightTweetSheetQueryAsync(string tweetId)
+        => GqlGetAsync(GqlEndpoint.HighlightTweetSheetQuery, new JsonObject { ["tweet_id"] = tweetId });
 
     public Task<ApiResponse> HomeTimelineAsync(int count, IEnumerable<string>? seenTweetIds, string? cursor)
     {

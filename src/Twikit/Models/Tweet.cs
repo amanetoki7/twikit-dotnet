@@ -138,6 +138,22 @@ public class Tweet : IEquatable<Tweet>
     /// <summary>ブックマーク済みか。</summary>
     public bool Bookmarked => Legacy.BoolOr("bookmarked", false);
 
+    /// <summary>
+    /// 投稿者のプロフィールの「ハイライト」タブに入っているか（Premium 機能）。
+    /// X はタイムラインやツイート取得にこのフラグを含めないため、<see cref="Client.GetUserHighlightsTweetsAsync"/> で取得した
+    /// ツイートか、<see cref="IsHighlightedAsync"/>・<see cref="HighlightAsync"/>・<see cref="UnhighlightAsync"/> を呼んだあと以外は
+    /// null です（「不明」であり「いいえ」ではありません）。
+    /// </summary>
+    public bool? Highlighted => Data.Sub("highlights_info").Bool("highlighted");
+
+    internal void SetHighlighted(bool value)
+    {
+        // Only HighlightTweetSheetQuery reports `highlights_info`; the timeline
+        // documents leave it out, so stamp it here when the state is known.
+        if (Data.Obj("highlights_info") is JsonObject info) info["highlighted"] = value;
+        else Data["highlights_info"] = new JsonObject { ["highlighted"] = value };
+    }
+
     private JsonObject EditControl => Data.Sub("edit_control");
 
     /// <summary>編集履歴のツイート ID。</summary>
@@ -376,6 +392,30 @@ public class Tweet : IEquatable<Tweet>
 
     /// <summary>ブックマークから削除します。</summary>
     public Task<HttpResponseMessage> DeleteBookmarkAsync() => _client.DeleteBookmarkAsync(Id);
+
+    /// <summary>プロフィールの「ハイライト」タブに追加します（Premium のみ）。成功すると <see cref="Highlighted"/> も true になります。</summary>
+    public async Task<HttpResponseMessage> HighlightAsync()
+    {
+        var response = await _client.HighlightTweetAsync(Id).ConfigureAwait(false);
+        SetHighlighted(true);
+        return response;
+    }
+
+    /// <summary>プロフィールの「ハイライト」タブから外します。成功すると <see cref="Highlighted"/> も false になります。</summary>
+    public async Task<HttpResponseMessage> UnhighlightAsync()
+    {
+        var response = await _client.UnhighlightTweetAsync(Id).ConfigureAwait(false);
+        SetHighlighted(false);
+        return response;
+    }
+
+    /// <summary>X に問い合わせてハイライト済みかを返し、結果を <see cref="Highlighted"/> に保存します。</summary>
+    public async Task<bool> IsHighlightedAsync()
+    {
+        var highlighted = await _client.IsTweetHighlightedAsync(Id).ConfigureAwait(false);
+        SetHighlighted(highlighted);
+        return highlighted;
+    }
 
     /// <summary>
     /// このツイートに返信します。

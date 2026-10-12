@@ -165,6 +165,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.GetDmInboxAsync()`、`CreateGroupAsync()`、`DeleteDmConversationAsync()` — 私信收件箱、创建群组、删除会话。
 - `Client.UpdateProfileAsync()`、`GetAboutAccountAsync()`、`GetUserSpotlightsAsync()`、`GetUserListsAsync()`、`GetMutedUsersAsync()`、`GetBlockedUsersAsync()`。
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
+- `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` 以及 `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — 把推文加入或移出个人资料的「精选」标签页，并查询是否已精选（仅限 Premium）。X 不会在时间线中返回这个标志，所以 `Tweet.Highlighted` 只对来自 `GetUserHighlightsTweetsAsync()` 的推文或在调用 `IsHighlightedAsync()` 之后才有值。`GetUserHighlightsTweetsAsync()` 也已更新到当前（2026-10）的 query id 和 features。
 - `SearchOptions` / `SearchQuery.Build` — 构建搜索查询。
 - `Article`、`Conversation` — 长文与私信会话。
 - `Twikit.Spaces` 命名空间 — Spaces 相关的类（`Spaces`、`Space`、`SpaceChat`、`SpaceVoiceSession` 等）。

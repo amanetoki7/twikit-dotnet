@@ -165,6 +165,7 @@ The last upstream release (`twikit==2.3.3`) is broken in several ways as of 2026
 - `Client.GetDmInboxAsync()`, `CreateGroupAsync()`, `DeleteDmConversationAsync()` — the DM inbox, group creation and conversation deletion.
 - `Client.UpdateProfileAsync()`, `GetAboutAccountAsync()`, `GetUserSpotlightsAsync()`, `GetUserListsAsync()`, `GetMutedUsersAsync()`, `GetBlockedUsersAsync()`.
 - `Client.GetUserMentionsAsync()`, `SearchTweetsByDateAsync()`, `GetThreadAsync()`, `GetTweetByUrlAsync()`, `GetExplorePageAsync()`.
+- `Client.HighlightTweetAsync()`, `UnhighlightTweetAsync()`, `IsTweetHighlightedAsync()` and `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — add a tweet to or remove it from the profile's Highlights tab and check whether it is there (Premium only). X does not ship the flag with timelines, so `Tweet.Highlighted` is only set for tweets from `GetUserHighlightsTweetsAsync()` or after `IsHighlightedAsync()` has been awaited. `GetUserHighlightsTweetsAsync()` was also brought up to the current (2026-10) query id and features.
 - `SearchOptions` / `SearchQuery.Build` — search query building.
 - `Article`, `Conversation` — long-form articles and DM conversations.
 - The `Twikit.Spaces` namespace — the Spaces classes (`Spaces`, `Space`, `SpaceChat`, `SpaceVoiceSession`, ...).
