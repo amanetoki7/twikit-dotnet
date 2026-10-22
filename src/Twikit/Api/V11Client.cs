@@ -44,6 +44,8 @@ public static class V11Endpoint
     public static readonly string NotificationsAll = $"https://{D}/i/api/2/notifications/all.json";
     public static readonly string NotificationsVerified = $"https://{D}/i/api/2/notifications/verified.json";
     public static readonly string NotificationsMentions = $"https://{D}/i/api/2/notifications/mentions.json";
+    /// <summary>通知タブをどこまで見たか（cursor-top の値）を送ると、未読数が 0 に戻る。</summary>
+    public static readonly string NotificationsAllLastSeenCursor = $"https://{D}/i/api/2/notifications/all/last_seen_cursor.json";
     public static readonly string LivePipelineEvents = $"https://api.{D}/live_pipeline/events";
     public static readonly string LivePipelineUpdateSubscriptions = $"https://api.{D}/1.1/live_pipeline/update_subscriptions";
     public static readonly string UserState = $"https://api.{D}/help-center/forms/api/prod/user_state.json";

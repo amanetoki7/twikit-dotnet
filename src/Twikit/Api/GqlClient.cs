@@ -26,6 +26,8 @@ public static class GqlEndpoint
     public static readonly string CombinedLists = Url("15lgkbq4YMpgnv3Xf8BlXg/CombinedLists");
     public static readonly string ProfileSpotlights = Url("mzoqrVGwk-YTSGME1dRfXQ/ProfileSpotlightsQuery");
     public static readonly string AboutAccount = Url("TzOG2twZEfhr9KmClvVVqA/AboutAccountQuery");
+    /// <summary>未読数（通知タブ・DM・XChat）。公式 Web は 30 秒ごとにポーリングしている（verified 2026-10）。</summary>
+    public static readonly string ViewerBadgeCounts = Url("q4Npr1-FYRWyXsRzPckwEA/ViewerBadgeCounts");
     // Same reasoning as UserByScreenName above.
     public static readonly string UserByRestId = Url("tD8zKvQzwY3kdx5yz6YmOw/UserByRestId");
     public static readonly string TweetDetail = Url("559hs_YZNV4IgA3Z6zIIuw/TweetDetail");
@@ -284,6 +286,18 @@ public sealed class GqlClient
 
     public Task<ApiResponse> AboutAccountAsync(string screenName)
         => GqlGetAsync(GqlEndpoint.AboutAccount, new JsonObject { ["screenName"] = screenName });
+
+    /// <summary>
+    /// 未読数を取得します。応答は <c>data.viewer_v2.user_results.result.badge_counts</c> に
+    /// <c>ntab_unread_count</c> / <c>dm_unread_count</c> / <c>xchat_unread_count</c> / <c>total_unread_count</c>。
+    /// レート制限は 15 分 50 回なので、ポーリング間隔は 18 秒より長くすること。
+    /// </summary>
+    public Task<ApiResponse> ViewerBadgeCountsAsync()
+    {
+        var headers = _base.BaseHeaders;
+        headers["X-Twitter-Polling"] = "true";
+        return GqlGetAsync(GqlEndpoint.ViewerBadgeCounts, V(), headers: headers);
+    }
 
     public Task<ApiResponse> UserByRestIdAsync(string userId)
     {
