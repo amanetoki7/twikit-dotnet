@@ -31,6 +31,12 @@ C# 版は Python 版（`twikit` 2.4.0）の構造をそのまま移植してい�
 | `await tweet.pin()` / `await tweet.unpin()` | `await tweet.PinAsync()` / `await tweet.UnpinAsync()` |
 | `client.get_draft_tweets()` / `create_draft_tweet(text)` / `delete_draft_tweets(ids)` | `client.GetDraftTweetsAsync()` / `CreateDraftTweetAsync(text)` / `DeleteDraftTweetsAsync(ids)` |
 | `client.post_draft_tweet(draft)` / `await draft.post()` | `client.PostDraftTweetAsync(draft)` / `await draft.PostAsync()` |
+| `client.get_community_notes(tweet_id)` / `await tweet.get_community_notes()` | `client.GetCommunityNotesAsync(tweetId)` / `await tweet.GetCommunityNotesAsync()` |
+| `client.get_community_notes_profile(alias)` | `client.GetCommunityNotesProfileAsync(alias)`（`CommunityNotesProfile`） |
+| `client.get_contributor_community_notes(alias, count, include_drafts)` | `client.GetContributorCommunityNotesAsync(alias, count, includeDrafts)` |
+| `client.get_community_notes_timeline(tab)` | `client.GetCommunityNotesTimelineAsync(CommunityNotesTimelineTab.NeedsYourHelp)` |
+| `client.rate_community_note(note_id, tweet_id, helpfulness, helpful_tags=...)` / `await note.rate(...)` | `client.RateCommunityNoteAsync(noteId, tweetId, CommunityNoteHelpfulness.Helpful, helpfulTags: ...)` / `await note.RateAsync(...)` |
+| `twikit.constants.COMMUNITY_NOTE_HELPFUL_TAGS` などのタプル | `CommunityNoteHelpfulTags` / `CommunityNoteNotHelpfulTags` / `CommunityNoteRatingSource` の定数クラス |
 | `twikit.List` | `TwitterList`（`System.Collections.Generic.List<T>` との混同を避けるため） |
 | `twikit.build_query(text, options)` | `SearchQuery.Build(text, new SearchOptions { ... })` |
 | `twikit.streaming.Topic.dm_update(id)` | `Twikit.Streaming.Topic.DmUpdate(id)` |

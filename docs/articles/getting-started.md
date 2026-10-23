@@ -160,6 +160,33 @@ await client.DeleteDraftTweetAsync(id);                      // まとめて消�
 
 スレッド（`thread_tweets` を持つ下書き）の投稿は Web クライアントでの送り方が未確認のため、`PostDraftTweetAsync` は例外にします。
 
+### コミュニティノート
+
+投稿に提案されたノートの一覧（表示前のものを含む）、協力者プロフィール、自分が書いたノート、`x.com/i/communitynotes` の 3 タブ、
+ノートの評価です。評価の効果 `RatingImpact` と執筆の効果 `WritingImpact` は Web クライアントと同じ式
+（`successful.total − unsuccessful.helpful_count − 2 × unsuccessful.not_helpful_count`、`currently_rated_helpful − currently_rated_not_helpful`）で計算します。
+
+```csharp
+var me = await client.GetCommunityNotesProfileAsync();                 // 自分（alias を渡すと他人の公開統計）
+Console.WriteLine($"{me.Alias} 評価の効果={me.RatingImpact} 執筆の効果={me.WritingImpact} 執筆解放まで={me.SuccessfulRatingNeededToEarnIn}");
+var mine = await client.GetContributorCommunityNotesAsync();            // 自分が書いたノート（includeDrafts: true で下書きも）
+
+var posts = await client.GetCommunityNotesTimelineAsync(CommunityNotesTimelineTab.NeedsYourHelp);   // New / RatedHelpful も同じ
+foreach (var post in posts)
+{
+    Console.WriteLine($"{post.Id} {post.CommunityNote?.Text}");          // X がその投稿に対して選んだノート
+    foreach (var note in await post.GetCommunityNotesAsync())             // 投稿の全ノート（評価できる形）
+        if (note.RatingStatus == "NeedsMoreRatings")
+            await note.RateAsync(CommunityNoteHelpfulness.Helpful, helpfulTags: new[] { CommunityNoteHelpfulTags.GoodSources });
+}
+
+await client.RateCommunityNoteAsync(noteId, tweetId, CommunityNoteHelpfulness.NotHelpful,
+    notHelpfulTags: new[] { CommunityNoteNotHelpfulTags.NoSources, CommunityNoteNotHelpfulTags.OpinionSpeculation });
+```
+
+理由タグは `Helpful` / `SomewhatHelpful` のとき `helpfulTags`、`NotHelpful` / `SomewhatHelpful` のとき `notHelpfulTags` を Web のフォームが尋ねます。
+不明なレベルやタグは `ArgumentException` です。`needs_your_help` タブは約 15 件の固定ピックで、3 タブともカーソル無しで終端します。
+
 ### ページ送り（`Result<T>`）
 
 一覧を返すメソッドは [`Result<T>`](../api/Twikit.Result-1.yml) を返します。`IReadOnlyList<T>` なので

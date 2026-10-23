@@ -425,6 +425,10 @@ public class Tweet : IEquatable<Tweet>
     /// <seealso cref="Client.UnpinTweetAsync"/>
     public Task<HttpResponseMessage> UnpinAsync() => _client.UnpinTweetAsync(Id);
 
+    /// <summary>この投稿に提案されたコミュニティノートをすべて取得します。</summary>
+    /// <seealso cref="Client.GetCommunityNotesAsync"/>
+    public Task<List<CommunityNote>> GetCommunityNotesAsync() => _client.GetCommunityNotesAsync(Id);
+
     /// <summary>
     /// このツイートに返信します。
     /// </summary>
@@ -752,15 +756,32 @@ public sealed class CommunityNote : IEquatable<CommunityNote>
     public JsonObject? BirdwatchProfile { get; private set; }
     /// <summary>ノートが付いたツイートの ID。</summary>
     public string? TweetId { get; private set; }
+    /// <summary><c>MisinformedOrPotentiallyMisleading</c> または <c>NotMisleading</c>。</summary>
+    public string? Classification { get; private set; }
+    /// <summary><c>NotMisleading</c> のノートのタグ（<c>ClearlySatire</c>、<c>FactuallyCorrect</c> など）。</summary>
+    public List<string> NotMisleadingTags { get; private set; } = new();
+    /// <summary>評価者が「役に立たない」とした理由（X が判定を出したあとに入ります）。</summary>
+    public List<string> NotHelpfulTags { get; private set; } = new();
+    /// <summary><c>NeedsMoreRatings</c>、<c>CurrentlyRatedHelpful</c>、<c>CurrentlyRatedNotHelpful</c>。</summary>
+    public string? RatingStatus { get; private set; }
+    public string? Language { get; private set; }
+    /// <summary><see cref="RatingStatus"/> を出した採点モデル（<c>CoreModel (v1.1)</c>）。</summary>
+    public string? DecidedBy { get; private set; }
+    public bool IsUrlNote { get; private set; }
+    /// <summary>執筆者の協力者エイリアス（<c>birdwatch_profile.alias</c>）。</summary>
+    public string? AuthorAlias { get; private set; }
+    /// <summary>生の JSON。</summary>
+    public JsonObject Raw { get; private set; } = new();
 
-    public CommunityNote(Client client, JsonObject data)
+    public CommunityNote(Client client, JsonObject data, string? tweetId = null)
     {
         _client = client;
-        Load(data);
+        Load(data, tweetId);
     }
 
-    private void Load(JsonObject data)
+    private void Load(JsonObject data, string? tweetId = null)
     {
+        Raw = data;
         Id = data.Str("rest_id") ?? "";
         var dataV1 = data.Sub("data_v1");
         Text = dataV1.Sub("summary").Str("text");
@@ -773,17 +794,30 @@ public sealed class CommunityNote : IEquatable<CommunityNote>
         IsMediaNote = data.BoolOr("is_media_note", false);
         MediaNoteMatches = data.Str("media_note_matches");
         BirdwatchProfile = data.Obj("birdwatch_profile");
-        TweetId = data.Sub("tweet_results").Sub("result").Str("rest_id");
+        TweetId = data.Sub("tweet_results").Sub("result").Str("rest_id") ?? tweetId;
+        Classification = dataV1.Str("classification");
+        NotMisleadingTags = dataV1.Arr("not_misleading_tags").Strings();
+        NotHelpfulTags = data.Arr("not_helpful_tags").Strings();
+        RatingStatus = data.Str("rating_status");
+        Language = data.Str("language");
+        DecidedBy = data.Str("decided_by");
+        IsUrlNote = data.BoolOr("is_url_note", false);
+        AuthorAlias = BirdwatchProfile.Str("alias");
     }
 
     /// <summary>最新の情報で更新します。</summary>
     public async Task UpdateAsync()
     {
         var fresh = await _client.GetCommunityNoteAsync(Id).ConfigureAwait(false);
-        Id = fresh.Id; Text = fresh.Text; MisleadingTags = fresh.MisleadingTags; TrustworthySources = fresh.TrustworthySources;
-        HelpfulTags = fresh.HelpfulTags; CreatedAt = fresh.CreatedAt; CanAppeal = fresh.CanAppeal; AppealStatus = fresh.AppealStatus;
-        IsMediaNote = fresh.IsMediaNote; MediaNoteMatches = fresh.MediaNoteMatches; BirdwatchProfile = fresh.BirdwatchProfile; TweetId = fresh.TweetId;
+        Load(fresh.Raw, TweetId);
     }
+
+    /// <summary>このノートを評価します。</summary>
+    /// <seealso cref="Client.RateCommunityNoteAsync"/>
+    public Task<CommunityNoteRating> RateAsync(string helpfulness, IEnumerable<string>? helpfulTags = null, IEnumerable<string>? notHelpfulTags = null,
+        string ratingSource = CommunityNoteRatingSource.PostDetail, bool forLiveNote = false)
+        => _client.RateCommunityNoteAsync(Id, TweetId ?? throw new InvalidOperationException("This note carries no tweet id."),
+            helpfulness, helpfulTags, notHelpfulTags, ratingSource, forLiveNote);
 
     public override string ToString() => $"<CommunityNote id=\"{Id}\">";
     public bool Equals(CommunityNote? other) => other is not null && Id == other.Id;

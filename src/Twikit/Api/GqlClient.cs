@@ -50,7 +50,14 @@ public static class GqlEndpoint
     public static readonly string DeleteDraftTweets = Url("h0rzaIYc9-v3zTQvx1J8OA/DeleteDraftTweets");
     public static readonly string Retweeters = Url("_wJOTLm5HMqNdcr1nGWlyA/Retweeters");
     public static readonly string Favoriters = Url("JpUz3qfNTiMbhqmJOvVJSw/Favoriters");
-    public static readonly string FetchCommunityNote = Url("fKWPPj271aTM-AB9Xp48IA/BirdwatchFetchOneNote");
+    public static readonly string FetchCommunityNote = Url("eKB7Azg-Y5Yy0PhXFVDxiQ/BirdwatchFetchOneNote");
+    // Community Notes (Birdwatch), captured from x.com on 2026-10-23.
+    public static readonly string BirdwatchFetchNotes = Url("FXliMyVVZbAxaiRcs9USqA/BirdwatchFetchNotes");
+    public static readonly string BirdwatchAuthenticatedUserProfile = Url("kD74-qBfrdRT5rO9YOl57g/BirdwatchFetchAuthenticatedUserProfile");
+    public static readonly string BirdwatchProfile = Url("id9iGfEQF47W1kvRBHUmRQ/BirdwatchFetchBirdwatchProfile");
+    public static readonly string BirdwatchContributorNotesSlice = Url("iULNpJL6QebO41SxjCbC-g/BirdwatchFetchContributorNotesSlice");
+    public static readonly string BirdwatchGlobalTimeline = Url("JfSNtbbfLxNc30ssXTHEug/BirdwatchFetchGlobalTimeline");
+    public static readonly string BirdwatchCreateRating = Url("gbshFt1Vmddrlio4vHWhhQ/BirdwatchCreateRating");
     public static readonly string UserTweets = Url("eoJ5zbv51Z_KVl81v9PmLQ/UserTweets");
     public static readonly string UserTweetsAndReplies = Url("wc5DRl4VaW5lSqJ8YbftZQ/UserTweetsAndReplies");
     public static readonly string UserMedia = Url("2DC9TKrcUzwGC_QskSVl5w/UserMedia");
@@ -84,7 +91,7 @@ public static class GqlEndpoint
     public static readonly string CreateBookmarkFolder = Url("6Xxqpq8TM_CREYiuof_h5w/createBookmarkFolder");
     public static readonly string Followers = Url("vJijlO_CM7dyGFNjDd7iqQ/Followers");
     public static readonly string ExplorePage = Url("gjznU4bIOCEjvXD5Un47bw/ExplorePage");
-    public static readonly string GenericTimelineById = Url("BrGScxnisMdTXyeLScaEhQ/GenericTimelineById");
+    public static readonly string GenericTimelineById = Url("SP-q18u35FgLsaeVKFHS2A/GenericTimelineById");
     public static readonly string BlueVerifiedFollowers = Url("cg6WLW39UujWMeX77xBnOA/BlueVerifiedFollowers");
     public static readonly string FollowersYouKnow = Url("wIEyYIhzwtDEgBvqDRCDVQ/FollowersYouKnow");
     public static readonly string Following = Url("b8XpwALENnJdFSHchkK6rw/Following");
@@ -395,6 +402,40 @@ public sealed class GqlClient
 
     public Task<ApiResponse> BirdWatchOneNoteAsync(string noteId)
         => GqlGetAsync(GqlEndpoint.FetchCommunityNote, new JsonObject { ["note_id"] = noteId }, Constants.CommunityNoteFeatures);
+
+    public Task<ApiResponse> BirdwatchFetchNotesAsync(string tweetId)
+        => GqlGetAsync(GqlEndpoint.BirdwatchFetchNotes, new JsonObject { ["tweet_id"] = tweetId }, Constants.BirdwatchNotesFeatures);
+
+    public Task<ApiResponse> BirdwatchAuthenticatedUserProfileAsync()
+        => GqlGetAsync(GqlEndpoint.BirdwatchAuthenticatedUserProfile, new JsonObject(), Constants.BirdwatchAuthenticatedProfileFeatures);
+
+    public Task<ApiResponse> BirdwatchProfileAsync(string alias)
+        => GqlGetAsync(GqlEndpoint.BirdwatchProfile, new JsonObject { ["alias"] = alias }, Constants.BirdwatchProfileFeatures);
+
+    public Task<ApiResponse> BirdwatchContributorNotesSliceAsync(string alias, int count, bool includeDrafts, string? cursor)
+    {
+        var variables = new JsonObject { ["count"] = count, ["alias"] = alias };
+        if (includeDrafts) variables["includeDrafts"] = true;
+        if (cursor is not null) variables["cursor"] = cursor;
+        return GqlGetAsync(GqlEndpoint.BirdwatchContributorNotesSlice, variables, Constants.BirdwatchContributorNotesFeatures);
+    }
+
+    public Task<ApiResponse> BirdwatchGlobalTimelineAsync()
+        => GqlGetAsync(GqlEndpoint.BirdwatchGlobalTimeline, new JsonObject(), Constants.BirdwatchGlobalTimelineFeatures);
+
+    public Task<ApiResponse> BirdwatchCreateRatingAsync(string noteId, string tweetId, JsonObject dataV2, string ratingSource, bool forLiveNote)
+    {
+        var variables = new JsonObject
+        {
+            ["note_id"] = noteId,
+            ["tweet_id"] = tweetId,
+            ["data_v2"] = dataV2,
+            ["rating_source"] = ratingSource,
+            ["source_platform"] = "BirdwatchWeb",
+            ["for_live_note"] = forLiveNote,
+        };
+        return GqlPostAsync(GqlEndpoint.BirdwatchCreateRating, variables);
+    }
 
     private Task<ApiResponse> GetUserTweetsAsync(string userId, int count, string? cursor, string endpoint)
     {
