@@ -34,6 +34,20 @@ public static class GqlEndpoint
     public static readonly string TweetResultByRestId = Url("LkId5Akr61BS6BmOIcffRg/TweetResultByRestId");
     public static readonly string FetchScheduledTweets = Url("H2elmT2R9DLhWoo0DZFNkA/FetchScheduledTweets");
     public static readonly string DeleteScheduledTweet = Url("CTOVqej0JBXAZSwkp1US0g/DeleteScheduledTweet");
+    // Drafts ("Unsent posts" > "Drafts"). Query ids and variable shapes captured
+    // from the web client on 2026-10-23. FetchDraftTweets takes `ascending` and
+    // answers `viewer.draft_list.response_data`; CreateDraftTweet takes the same
+    // `post_tweet_request` as CreateScheduledTweet and answers `tweet.rest_id`;
+    // DeleteDraftTweets takes a list of ids and answers
+    // `draft_tweets_batch_delete: "Done"`; DeleteDraftTweet takes one id and
+    // answers `drafttweet_delete: "Done"`. There is no "post a draft" document:
+    // the web client sends an ordinary CreateTweet built from the stored
+    // request and then DeleteDraftTweet (captured 2026-10-23). A reply draft
+    // stores `in_reply_to_status_id` with `auto_populate_reply_metadata: true`.
+    public static readonly string FetchDraftTweets = Url("L9RqKWmAWxK6vGtR3Qdsxw/FetchDraftTweets");
+    public static readonly string CreateDraftTweet = Url("cH9HZWz_EW9gnswvA4ZRiQ/CreateDraftTweet");
+    public static readonly string DeleteDraftTweet = Url("bkh9G3FGgTldS9iTKWWYYw/DeleteDraftTweet");
+    public static readonly string DeleteDraftTweets = Url("h0rzaIYc9-v3zTQvx1J8OA/DeleteDraftTweets");
     public static readonly string Retweeters = Url("_wJOTLm5HMqNdcr1nGWlyA/Retweeters");
     public static readonly string Favoriters = Url("JpUz3qfNTiMbhqmJOvVJSw/Favoriters");
     public static readonly string FetchCommunityNote = Url("fKWPPj271aTM-AB9Xp48IA/BirdwatchFetchOneNote");
@@ -328,6 +342,32 @@ public sealed class GqlClient
 
     public Task<ApiResponse> DeleteScheduledTweetAsync(string tweetId)
         => GqlPostAsync(GqlEndpoint.DeleteScheduledTweet, new JsonObject { ["scheduled_tweet_id"] = tweetId });
+
+    public Task<ApiResponse> FetchDraftTweetsAsync(bool ascending = false)
+        => GqlGetAsync(GqlEndpoint.FetchDraftTweets, new JsonObject { ["ascending"] = ascending });
+
+    public Task<ApiResponse> CreateDraftTweetAsync(string text, IEnumerable<string>? mediaIds, string? attachmentUrl, string? inReplyToTweetId = null)
+    {
+        var request = new JsonObject
+        {
+            // The web client sets this only for replies.
+            ["auto_populate_reply_metadata"] = inReplyToTweetId is not null,
+            ["status"] = text,
+            ["exclude_reply_user_ids"] = new JsonArray(),
+            ["media_ids"] = (mediaIds ?? Enumerable.Empty<string>()).ToJsonArray(),
+            ["thread_tweets"] = new JsonArray(),
+        };
+        if (inReplyToTweetId is not null) request["in_reply_to_status_id"] = inReplyToTweetId;
+        // A quoted tweet is stored as its URL, the same way the web client does.
+        if (attachmentUrl is not null) request["attachment_url"] = attachmentUrl;
+        return GqlPostAsync(GqlEndpoint.CreateDraftTweet, new JsonObject { ["post_tweet_request"] = request });
+    }
+
+    public Task<ApiResponse> DeleteDraftTweetAsync(string draftTweetId)
+        => GqlPostAsync(GqlEndpoint.DeleteDraftTweet, new JsonObject { ["draft_tweet_id"] = draftTweetId });
+
+    public Task<ApiResponse> DeleteDraftTweetsAsync(IEnumerable<string> draftTweetIds)
+        => GqlPostAsync(GqlEndpoint.DeleteDraftTweets, new JsonObject { ["draft_tweet_ids"] = draftTweetIds.ToJsonArray() });
 
     public Task<ApiResponse> TweetEngagementsAsync(string tweetId, int count, string? cursor, string endpoint)
     {

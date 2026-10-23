@@ -661,6 +661,125 @@ public partial class Client
     public async Task<HttpResponseMessage> DeleteScheduledTweetAsync(string tweetId)
         => (await Gql.DeleteScheduledTweetAsync(tweetId).ConfigureAwait(false)).Http;
 
+    /// <summary>下書き（「未送信ポスト」→「下書き」）の一覧を取得します。</summary>
+    /// <param name="ascending">古い順に並べるか。既定（false）は Web クライアントと同じ新しい順です。</param>
+    /// <seealso cref="CreateDraftTweetAsync"/>
+    /// <seealso cref="DeleteDraftTweetsAsync"/>
+    public async Task<List<DraftTweet>> GetDraftTweetsAsync(bool ascending = false)
+    {
+        var response = await Gql.FetchDraftTweetsAsync(ascending).ConfigureAwait(false);
+        var errors = JsonExtensions.FatalErrors(response.Json, "viewer");
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new TwitterException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        var drafts = response.Json.Get("data").Get("viewer").Get("draft_list").ArrOrEmpty("response_data");
+        return drafts.Objects().Select(d => new DraftTweet(this, d)).ToList();
+    }
+
+    /// <summary>
+    /// 下書きを保存します。
+    /// </summary>
+    /// <remarks>
+    /// <see cref="CreateScheduledTweetAsync"/> と同じ <c>post_tweet_request</c> を送ります（2026-10-23 に Web クライアントで確認）。
+    /// 投稿するには <see cref="PostDraftTweetAsync(DraftTweet)"/> を使います。
+    /// </remarks>
+    /// <param name="text">本文。</param>
+    /// <param name="mediaIds">添付するメディア ID の一覧。</param>
+    /// <param name="attachmentUrl">引用するツイートの URL。</param>
+    /// <param name="inReplyToTweetId">返信先のツイート ID。</param>
+    /// <returns>下書きの ID。</returns>
+    /// <exception cref="CouldNotTweetException">X が下書きの ID を返さなかった。</exception>
+    public async Task<string> CreateDraftTweetAsync(string text = "", IList<string>? mediaIds = null, string? attachmentUrl = null, string? inReplyToTweetId = null)
+    {
+        var response = await Gql.CreateDraftTweetAsync(text, mediaIds, attachmentUrl, inReplyToTweetId).ConfigureAwait(false);
+        var errors = JsonExtensions.FatalErrors(response.Json, "tweet");
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new CouldNotTweetException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        return response.Json.Get("data").Get("tweet").Str("rest_id") ?? throw new CouldNotTweetException("X returned no draft tweet id.");
+    }
+
+    /// <summary>下書きをまとめて削除します。</summary>
+    /// <param name="draftTweetIds">削除する下書きの ID。</param>
+    /// <exception cref="TwitterException">X が <c>draft_tweets_batch_delete: "Done"</c> を返さなかった。</exception>
+    public async Task<HttpResponseMessage> DeleteDraftTweetsAsync(IEnumerable<string> draftTweetIds)
+    {
+        var response = await Gql.DeleteDraftTweetsAsync(draftTweetIds).ConfigureAwait(false);
+        var errors = JsonExtensions.FatalErrors(response.Json, "draft_tweets_batch_delete");
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new TwitterException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        var result = response.Json.Get("data").Str("draft_tweets_batch_delete");
+        if (result != "Done")
+            throw new TwitterException($"X did not confirm the draft deletion: {response.Json.Get("data").Dump()}");
+        return response.Http;
+    }
+
+    /// <summary>下書きを 1 件削除します（Web クライアントが投稿後に呼ぶ単数形の <c>DeleteDraftTweet</c>）。</summary>
+    /// <exception cref="TwitterException">X が <c>drafttweet_delete: "Done"</c> を返さなかった。</exception>
+    public async Task<HttpResponseMessage> DeleteDraftTweetAsync(string draftTweetId)
+    {
+        var response = await Gql.DeleteDraftTweetAsync(draftTweetId).ConfigureAwait(false);
+        var errors = JsonExtensions.FatalErrors(response.Json, "drafttweet_delete");
+        if (errors is not null)
+        {
+            ErrorCodes.RaiseExceptionsFromResponse(errors);
+            throw new TwitterException(errors.ErrorMessage(errors[0].ToJsonString()));
+        }
+        if (response.Json.Get("data").Str("drafttweet_delete") != "Done")
+            throw new TwitterException($"X did not confirm the draft deletion: {response.Json.Get("data").Dump()}");
+        return response.Http;
+    }
+
+    /// <summary>
+    /// 下書きを投稿し、投稿できたら下書きを削除します。
+    /// </summary>
+    /// <remarks>
+    /// X に「下書きを投稿する」API は無く、Web クライアントは保存されている <c>post_tweet_request</c>（本文、メディア、引用 URL、返信先）から
+    /// 通常の CreateTweet を送り、続けて DeleteDraftTweet を呼びます（2026-10-23 に確認）。ここでも同じ 2 リクエストを送ります。
+    /// 投稿は成功したのに削除に失敗したときは、投稿を無かったことにできないので例外にせず <see cref="TwikitWarnings"/> に警告を流して
+    /// 投稿したツイートを返します。<c>thread_tweets</c> を持つ下書き（スレッド）は Web クライアントでの送り方が未確認のため、
+    /// 何も送らずに例外にします。
+    /// </remarks>
+    /// <param name="draft">投稿する下書き。</param>
+    /// <returns>投稿されたツイート。</returns>
+    /// <exception cref="TwitterException">下書きがスレッドを含む。</exception>
+    /// <exception cref="CouldNotTweetException">投稿できなかった（下書きは残ります）。</exception>
+    public async Task<Tweet> PostDraftTweetAsync(DraftTweet draft)
+    {
+        if (draft.ThreadTweets.Count > 0)
+            throw new TwitterException($"Draft {draft.Id} is a thread ({draft.ThreadTweets.Count} follow-up tweets); posting thread drafts is not supported.");
+        var tweet = await CreateTweetAsync(
+            draft.Text,
+            mediaIds: draft.MediaIds.Count > 0 ? draft.MediaIds : null,
+            replyTo: draft.InReplyToTweetId,
+            attachmentUrl: draft.AttachmentUrl).ConfigureAwait(false);
+        try
+        {
+            await DeleteDraftTweetAsync(draft.Id).ConfigureAwait(false);
+        }
+        catch (TwitterException e)
+        {
+            TwikitWarnings.Warn($"Posted draft {draft.Id} as tweet {tweet.Id} but could not delete the draft: {e.Message}");
+        }
+        return tweet;
+    }
+
+    /// <summary>ID で指定した下書きを投稿し、下書きを削除します（<see cref="PostDraftTweetAsync(DraftTweet)"/>）。</summary>
+    /// <exception cref="NotFoundException">その ID の下書きが無い。</exception>
+    public async Task<Tweet> PostDraftTweetAsync(string draftTweetId)
+    {
+        var draft = (await GetDraftTweetsAsync().ConfigureAwait(false)).FirstOrDefault(d => d.Id == draftTweetId)
+            ?? throw new NotFoundException($"Draft {draftTweetId} was not found.");
+        return await PostDraftTweetAsync(draft).ConfigureAwait(false);
+    }
+
     private async Task<Result<User>> GetTweetEngagementsAsync(string tweetId, int count, string? cursor,
         Func<string, int, string?, Task<ApiResponse>> f)
     {

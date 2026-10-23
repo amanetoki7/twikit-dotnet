@@ -536,6 +536,69 @@ public sealed class ScheduledTweet
     public override string ToString() => $"<ScheduledTweet id=\"{Id}\">";
 }
 
+/// <summary>下書き（X の「未送信ポスト」→「下書き」）。</summary>
+/// <remarks>
+/// X は下書きを、投稿時に送る <c>post_tweet_request</c> と同じ形で保存します。2026-10-23 時点で確認した
+/// フィールドは本文（<c>status</c>）、メディア ID、引用元 URL（<c>attachment_url</c>）、返信先（<c>in_reply_to_status_id</c>）、
+/// 返信メタデータの自動補完フラグ、返信から除外するユーザー ID、スレッド（<c>thread_tweets</c>）です。それ以外は
+/// <see cref="Request"/> から読めます。投稿専用の API は無く、Web クライアントは通常の CreateTweet を送ってから下書きを
+/// 削除します（<see cref="PostAsync"/>）。
+/// </remarks>
+public sealed class DraftTweet
+{
+    private readonly Client _client;
+
+    /// <summary>下書きの ID。</summary>
+    public string Id { get; }
+    /// <summary>本文。</summary>
+    public string Text { get; }
+    /// <summary>添付するメディア ID の一覧。</summary>
+    public List<string> MediaIds { get; }
+    /// <summary>引用するツイートの URL（引用でなければ null）。</summary>
+    public string? AttachmentUrl { get; }
+    /// <summary>返信先のツイート ID（返信でなければ null）。</summary>
+    public string? InReplyToTweetId { get; }
+    /// <summary>返信先の @ メンションを自動で付けるか。</summary>
+    public bool AutoPopulateReplyMetadata { get; }
+    /// <summary>返信から除外するユーザー ID。</summary>
+    public List<string> ExcludeReplyUserIds { get; }
+    /// <summary>スレッドの続きのツイート（生の JSON）。</summary>
+    public JsonArray ThreadTweets { get; }
+    /// <summary>リクエストの種類（<c>PostTweetRequest</c>）。</summary>
+    public string? Type { get; }
+    /// <summary>下書きの持ち主のユーザー ID。</summary>
+    public string? UserId { get; }
+    /// <summary>保存されている <c>tweet_create_request</c> そのもの。</summary>
+    public JsonObject Request { get; }
+    /// <summary>応答の生の JSON。</summary>
+    public JsonObject Raw { get; }
+
+    public DraftTweet(Client client, JsonObject data)
+    {
+        _client = client;
+        Raw = data;
+        Id = data.Str("rest_id") ?? "";
+        Request = data.Sub("tweet_create_request");
+        Text = Request.Str("status") ?? "";
+        MediaIds = Request.Arr("media_ids").Strings();
+        AttachmentUrl = Request.Str("attachment_url");
+        InReplyToTweetId = Request.Str("in_reply_to_status_id");
+        AutoPopulateReplyMetadata = Request.BoolOr("auto_populate_reply_metadata", false);
+        ExcludeReplyUserIds = Request.Arr("exclude_reply_user_ids").Strings();
+        ThreadTweets = Request.ArrOrEmpty("thread_tweets");
+        Type = Request.Str("type");
+        UserId = data.Sub("user_results").Sub("result").Str("rest_id");
+    }
+
+    /// <summary>この下書きを削除します。</summary>
+    public Task<HttpResponseMessage> DeleteAsync() => _client.DeleteDraftTweetAsync(Id);
+
+    /// <summary>この下書きを投稿し、下書きを削除します（<see cref="Client.PostDraftTweetAsync(DraftTweet)"/>）。</summary>
+    public Task<Tweet> PostAsync() => _client.PostDraftTweetAsync(this);
+
+    public override string ToString() => $"<DraftTweet id=\"{Id}\">";
+}
+
 /// <summary>削除済みなどで表示できないツイートの墓石。</summary>
 public sealed class TweetTombstone : IEquatable<TweetTombstone>
 {

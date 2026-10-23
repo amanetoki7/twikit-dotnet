@@ -167,6 +167,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
 - `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` と `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — プロフィールの「ハイライト」タブへの追加・解除と、ハイライト済みかの確認（Premium 限定）。X はタイムラインにこのフラグを含めないため、`Tweet.Highlighted` は `GetUserHighlightsTweetsAsync()` で取得したツイートか、`IsHighlightedAsync()` を呼んだあとだけ値が入ります。`GetUserHighlightsTweetsAsync()` の query id / features も 2026-10 時点のものへ更新しました。
 - `Client.GetOriginalContentRewardsEligibilityAsync()`、`GetCreatorSubscriptionsEligibilityAsync()` — クリエイタースタジオの「オリジナルコンテンツ報酬」「サブスクリプション」の参加条件一覧と達成状況（`CreatorEligibility` / `CreatorRequirement`: 条件文、達成済みか、現在値、進捗、注記）。X はこのページを GraphQL ではなく server-driven UI（`/i/jfapi/`、text/plain の生バイナリ）で返すため、そのデコーダ（`Client.Jetfuel` で他のページも取得可）も含みます。
+- `Client.GetDraftTweetsAsync()`、`CreateDraftTweetAsync()`、`DeleteDraftTweetsAsync()` / `DeleteDraftTweetAsync()`、`PostDraftTweetAsync()` と `DraftTweet` — 「未送信ポスト」の下書きの一覧・保存（本文、メディア、引用 URL、返信先）・削除・投稿。X に下書き投稿専用の API は無く、Web クライアントと同じく通常の CreateTweet を送ってから下書きを削除します。
 - `SearchOptions` / `SearchQuery.Build` — 検索クエリの組み立て。
 - `Article`、`Conversation` — 長文記事と DM の会話。
 - `Twikit.Spaces` 名前空間 — スペース関連のクラス群（`Spaces`、`Space`、`SpaceChat`、`SpaceVoiceSession` など）。

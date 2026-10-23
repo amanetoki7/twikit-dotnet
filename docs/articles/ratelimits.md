@@ -32,6 +32,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | CreateListAsync                           | -     | CreateList                          |
 | RetweetAsync                              | -     | CreateRetweet                       |
 | CreateScheduledTweetAsync                 | -     | CreateScheduledTweet                |
+| CreateDraftTweetAsync                     | 500   | CreateDraftTweet                    |
 | CreateTweetAsync                          | 300*  | CreateTweet                         |
 | DeleteBookmarkAsync                       | -     | DeleteBookmark                      |
 | UnhighlightTweetAsync                     | -     | DeleteHighlight                     |
@@ -39,12 +40,15 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | DeleteListBannerAsync                     | -     | DeleteListBanner                    |
 | DeleteRetweetAsync                        | -     | DeleteRetweet                       |
 | DeleteScheduledTweetAsync                 | -     | DeleteScheduledTweet                |
+| DeleteDraftTweetsAsync                    | 50    | DeleteDraftTweets                   |
+| DeleteDraftTweetAsync                     | 500   | DeleteDraftTweet                    |
 | DeleteTweetAsync                          | -     | DeleteTweet                         |
 | UnfollowUserAsync                         | 187   | friendships/destroy.json            |
 | EditListBannerAsync                       | -     | EditListBanner                      |
 | GetFavoritersAsync                        | 500   | Favoriters                          |
 | FavoriteTweetAsync                        | -     | FavoriteTweet                       |
 | GetScheduledTweetsAsync                   | 500   | FetchScheduledTweets                |
+| GetDraftTweetsAsync                       | 500   | FetchDraftTweets                    |
 | GetUserFollowersAsync                     | 50    | Followers                           |
 | GetUserFollowersYouKnowAsync              | 500   | FollowersYouKnow                    |
 | GetUserFollowingAsync                     | 500   | Following                           |

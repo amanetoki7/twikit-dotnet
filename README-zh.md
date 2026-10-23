@@ -167,6 +167,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
 - `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` 以及 `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — 把推文加入或移出个人资料的「精选」标签页，并查询是否已精选（仅限 Premium）。X 不会在时间线中返回这个标志，所以 `Tweet.Highlighted` 只对来自 `GetUserHighlightsTweetsAsync()` 的推文或在调用 `IsHighlightedAsync()` 之后才有值。`GetUserHighlightsTweetsAsync()` 也已更新到当前（2026-10）的 query id 和 features。
 - `Client.GetOriginalContentRewardsEligibilityAsync()`、`GetCreatorSubscriptionsEligibilityAsync()` — 创作者工作室「原创内容奖励」「订阅」页面的参与条件列表及当前账号的达成情况（`CreatorEligibility` / `CreatorRequirement`：条件文本、是否达成、当前值、进度、备注）。X 以 server-driven UI（`/i/jfapi/`，text/plain 的原始二进制）而非 GraphQL 返回这些页面，因此也包含了解码器（`Client.Jetfuel` 可获取其他页面）。
+- `Client.GetDraftTweetsAsync()`、`CreateDraftTweetAsync()`、`DeleteDraftTweetsAsync()` / `DeleteDraftTweetAsync()`、`PostDraftTweetAsync()` 以及 `DraftTweet` — 列出、保存（正文、媒体、引用 URL、回复对象）、删除和发布「未发送的帖子」中的草稿。X 没有专门的「发布草稿」API；与网页端一样，先发送普通的 CreateTweet，再删除草稿。
 - `SearchOptions` / `SearchQuery.Build` — 构建搜索查询。
 - `Article`、`Conversation` — 长文与私信会话。
 - `Twikit.Spaces` 命名空间 — Spaces 相关的类（`Spaces`、`Space`、`SpaceChat`、`SpaceVoiceSession` 等）。

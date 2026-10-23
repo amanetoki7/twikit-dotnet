@@ -129,6 +129,22 @@ foreach (var r in subscriptions.Unmet) Console.WriteLine(r.Text);
 行に付く注記（「返信は含まれません」など）は `Notes`、ヘルプセンターのリンクは `HelpUrl` です。
 他の Jetfuel ページは `client.Jetfuel.GetAsync("creators/studio")` で生の応答（`ApiResponse.Bytes` にバイナリ）を取得できます。
 
+### 下書き
+
+「未送信ポスト」→「下書き」の一覧・保存・削除・投稿です。保存するときは投稿時と同じ `post_tweet_request`（本文、メディア ID、
+引用元 URL、返信先）を送ります。X に「下書きを投稿する」API は無く、Web クライアントは保存内容から通常の CreateTweet を
+送ったあと DeleteDraftTweet を呼ぶので、`PostDraftTweetAsync` も同じ 2 リクエストを送ります。
+
+```csharp
+var id = await client.CreateDraftTweetAsync("あとで書く", attachmentUrl: "https://x.com/user/status/1");
+foreach (var d in await client.GetDraftTweetsAsync())       // 新しい順
+    Console.WriteLine($"{d.Id} {d.Text} media={d.MediaIds.Count} quote={d.AttachmentUrl} reply={d.InReplyToTweetId}");
+var tweet = await client.PostDraftTweetAsync(id);            // 投稿して下書きを削除（DraftTweet.PostAsync() も同じ）
+await client.DeleteDraftTweetAsync(id);                      // まとめて消すなら DeleteDraftTweetsAsync(ids)
+```
+
+スレッド（`thread_tweets` を持つ下書き）の投稿は Web クライアントでの送り方が未確認のため、`PostDraftTweetAsync` は例外にします。
+
 ### ページ送り（`Result<T>`）
 
 一覧を返すメソッドは [`Result<T>`](../api/Twikit.Result-1.yml) を返します。`IReadOnlyList<T>` なので
