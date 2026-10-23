@@ -103,6 +103,32 @@ await tweet.UnhighlightAsync();
 var highlights = await client.GetUserHighlightsTweetsAsync(userId);   // 全件 Highlighted == true
 ```
 
+### クリエイター収益化の参加条件（Premium）
+
+クリエイタースタジオの「オリジナルコンテンツ報酬」「サブスクリプション」ページにある参加条件の一覧と、
+ログイン中のアカウントがどこまで満たしているかを取得します。X はこのページを GraphQL ではなく
+server-driven UI（`/i/jfapi/...`、text/plain の生バイナリ）で返すので、このライブラリがデコードして
+[`CreatorEligibility`](../api/Twikit.CreatorEligibility.yml) に組み立てます。
+
+```csharp
+var rewards = await client.GetOriginalContentRewardsEligibilityAsync();
+Console.WriteLine(rewards.Summary);        // 「…登録するには、次の条件を満たす必要があります:」
+foreach (var r in rewards.Requirements)
+    Console.WriteLine($"{(r.IsMet ? "OK" : "--")} {r.Text} {r.Value} {r.Progress:P0}");
+// OK Premium、Premium+、またはPremium Businessに登録
+// OK 18歳以上
+// -- 認証済みフォロワーが500人以上いる 136 25%
+// -- 過去90日間でホームタイムラインの認証済みインプレッションが50万回以上 26.9K 5%
+Console.WriteLine(rewards.IsEligible);     // 全条件を満たしていれば true
+
+var subscriptions = await client.GetCreatorSubscriptionsEligibilityAsync();
+foreach (var r in subscriptions.Unmet) Console.WriteLine(r.Text);
+```
+
+`Value` と `Progress` は数値条件の行だけに入ります（X は進捗バーを 20 分割で丸めるので `Progress` は目安です）。
+行に付く注記（「返信は含まれません」など）は `Notes`、ヘルプセンターのリンクは `HelpUrl` です。
+他の Jetfuel ページは `client.Jetfuel.GetAsync("creators/studio")` で生の応答（`ApiResponse.Bytes` にバイナリ）を取得できます。
+
 ### ページ送り（`Result<T>`）
 
 一覧を返すメソッドは [`Result<T>`](../api/Twikit.Result-1.yml) を返します。`IReadOnlyList<T>` なので

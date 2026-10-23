@@ -159,8 +159,8 @@ public sealed class GuestClient : IRequestClient, IRawHttpSession, IDisposable
             Headers = headers, Params = options.Params, Json = options.Json, Form = options.Form,
             Files = options.Files, FollowRedirects = options.FollowRedirects, Timeout = options.Timeout,
         }).ConfigureAwait(false);
-        var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var apiResponse = new ApiResponse(response, text);
+        var apiResponse = new ApiResponse(response, await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+        var text = apiResponse.Text;
 
         var statusCode = (int)response.StatusCode;
         if (statusCode >= 400 && options.RaiseException)

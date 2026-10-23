@@ -68,6 +68,9 @@ public partial class Client : IRequestClient, IRawHttpSession, IDisposable
     /// <summary>v1.1 エンドポイント層。</summary>
     public V11Client V11 { get; }
 
+    /// <summary>Jetfuel（クリエイタースタジオなどの server-driven UI）エンドポイント層。</summary>
+    public JetfuelClient Jetfuel { get; }
+
     /// <summary>X スペース（<see cref="Twikit.Spaces.Spaces"/>）。</summary>
     public Spaces.Spaces Spaces { get; }
 
@@ -110,6 +113,7 @@ public partial class Client : IRequestClient, IRawHttpSession, IDisposable
         UserAgent = userAgent ?? DefaultUserAgent;
         Gql = new GqlClient(this);
         V11 = new V11Client(this);
+        Jetfuel = new JetfuelClient(this);
         Spaces = new Spaces.Spaces(this);
     }
 
@@ -373,8 +377,10 @@ public partial class Client : IRequestClient, IRawHttpSession, IDisposable
     {
         _responseHeaders = new Dictionary<string, string>(TwitterException.HeadersOf(response)!, StringComparer.OrdinalIgnoreCase);
         RemoveDuplicateCt0Cookie();
-        var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        return new ApiResponse(response, text);
+        // Bytes, not a string: Jetfuel (/i/jfapi/) answers raw binary under
+        // text/plain, and decoding it as UTF-8 first would corrupt it.
+        var bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+        return new ApiResponse(response, bytes);
     }
 
     private static RequestOptions CloneWithHeaders(RequestOptions options, Dictionary<string, string> headers) => new()

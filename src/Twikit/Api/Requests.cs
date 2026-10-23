@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Twikit.Api;
@@ -38,12 +39,17 @@ public sealed class RequestOptions
 
 /// <summary>
 /// API の応答。本文は JSON として解析済み（JSON でなければ <see cref="Json"/> は null）で、
-/// 生のテキストと <see cref="HttpResponseMessage"/> も参照できます。
+/// 生のバイト列・テキストと <see cref="HttpResponseMessage"/> も参照できます。
 /// </summary>
 public sealed class ApiResponse
 {
     public HttpResponseMessage Http { get; }
-    /// <summary>本文のテキスト。</summary>
+    /// <summary>
+    /// 本文の生のバイト列。Jetfuel（<c>/i/jfapi/</c>）のようにバイナリを返すエンドポイントはこちらを読みます
+    /// （<see cref="Text"/> は UTF-8 として復号したものなので、バイナリは壊れます）。
+    /// </summary>
+    public byte[] Bytes { get; }
+    /// <summary>本文のテキスト（UTF-8）。</summary>
     public string Text { get; }
     /// <summary>本文を JSON として解析したもの。JSON でなければ null。</summary>
     public JsonNode? Json { get; }
@@ -53,9 +59,18 @@ public sealed class ApiResponse
     public JsonArray? Array => Json as JsonArray;
     public int StatusCode => (int)Http.StatusCode;
 
+    public ApiResponse(HttpResponseMessage http, byte[] bytes)
+    {
+        Http = http;
+        Bytes = bytes;
+        Text = Encoding.UTF8.GetString(bytes);
+        Json = JsonExtensions.TryParse(Text);
+    }
+
     public ApiResponse(HttpResponseMessage http, string text)
     {
         Http = http;
+        Bytes = Encoding.UTF8.GetBytes(text);
         Text = text;
         Json = JsonExtensions.TryParse(text);
     }

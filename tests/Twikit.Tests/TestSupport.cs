@@ -39,6 +39,14 @@ public sealed class FakeHandler : HttpMessageHandler
     public static HttpResponseMessage Text(string text, HttpStatusCode status = HttpStatusCode.OK)
         => new(status) { Content = new StringContent(text, Encoding.UTF8, "text/plain") };
 
+    /// <summary>Binary body under text/plain, the way X serves Jetfuel documents.</summary>
+    public static HttpResponseMessage Bytes(byte[] bytes, HttpStatusCode status = HttpStatusCode.OK, string contentType = "text/plain")
+    {
+        var content = new ByteArrayContent(bytes);
+        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+        return new HttpResponseMessage(status) { Content = content };
+    }
+
     public string? Header(int index, string name)
         => Requests[index].Request.Headers.TryGetValues(name, out var values) ? string.Join(",", values) : null;
 }

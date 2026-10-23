@@ -82,6 +82,8 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | GetUserByIdAsync                          | 500   | UserByRestId                        |
 | GetUserByScreenNameAsync                  | 95    | UserByScreenName                    |
 | GetUserHighlightsTweetsAsync              | -     | UserHighlightsTweets                |
+| GetOriginalContentRewardsEligibilityAsync | 5000  | jfapi/creators/original_content_rewards |
+| GetCreatorSubscriptionsEligibilityAsync   | 5000  | jfapi/creators/subscriptionsv2/eligibility |
 | GetUserTweetsAsync(..., "Likes")          | 500   | Likes                               |
 | GetUserTweetsAsync(..., "Media")          | 500   | UserMedia                           |
 | GetUserTweetsAsync(..., "Tweets")         | 50    | UserTweets                          |
