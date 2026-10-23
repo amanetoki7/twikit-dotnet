@@ -103,6 +103,21 @@ await tweet.UnhighlightAsync();
 var highlights = await client.GetUserHighlightsTweetsAsync(userId);   // 全件 Highlighted == true
 ```
 
+### ピン留め
+
+プロフィールのピンは 1 件だけで、別のツイートをピン留めすると置き換わります。ピン留めできるのは自分のツイートだけで、
+他人のツイートは `NotFoundException` になります。ピン留めしていないツイートの解除は何もせず成功します。
+レート制限はヘッダーの値ではなく pin / unpin それぞれ 100 回なので、[レート制限](ratelimits.md) の脚注も参照してください。
+
+```csharp
+await client.PinTweetAsync("2103725182292820029");    // v1.1 account/pin_tweet.json（フォームの `id`）
+await client.UnpinTweetAsync("2103725182292820029");
+
+var tweet = await client.GetTweetByIdAsync("2103725182292820029");
+await tweet.PinAsync();
+await tweet.UnpinAsync();
+```
+
 ### クリエイター収益化の参加条件（Premium）
 
 クリエイタースタジオの「オリジナルコンテンツ報酬」「サブスクリプション」ページにある参加条件の一覧と、

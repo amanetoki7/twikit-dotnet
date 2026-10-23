@@ -166,6 +166,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.UpdateProfileAsync()`、`GetAboutAccountAsync()`、`GetUserSpotlightsAsync()`、`GetUserListsAsync()`、`GetMutedUsersAsync()`、`GetBlockedUsersAsync()`。
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
 - `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` 以及 `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — 把推文加入或移出个人资料的「精选」标签页，并查询是否已精选（仅限 Premium）。X 不会在时间线中返回这个标志，所以 `Tweet.Highlighted` 只对来自 `GetUserHighlightsTweetsAsync()` 的推文或在调用 `IsHighlightedAsync()` 之后才有值。`GetUserHighlightsTweetsAsync()` 也已更新到当前（2026-10）的 query id 和 features。
+- `Client.PinTweetAsync()`、`UnpinTweetAsync()` 以及 `Tweet.PinAsync()` / `Tweet.UnpinAsync()` — 把推文置顶到个人资料或取消置顶（v1.1 `account/pin_tweet.json` / `unpin_tweet.json`）。个人资料只能有一条置顶，置顶另一条会替换掉原来的；他人的推文会抛出 `NotFoundException`，取消未置顶的推文会直接成功而不做任何更改。实际限流是 pin / unpin 各 100 次，而不是响应头里的数值，详见 [docs/articles/ratelimits.md](docs/articles/ratelimits.md) 的脚注。
 - `Client.GetOriginalContentRewardsEligibilityAsync()`、`GetCreatorSubscriptionsEligibilityAsync()` — 创作者工作室「原创内容奖励」「订阅」页面的参与条件列表及当前账号的达成情况（`CreatorEligibility` / `CreatorRequirement`：条件文本、是否达成、当前值、进度、备注）。X 以 server-driven UI（`/i/jfapi/`，text/plain 的原始二进制）而非 GraphQL 返回这些页面，因此也包含了解码器（`Client.Jetfuel` 可获取其他页面）。
 - `Client.GetDraftTweetsAsync()`、`CreateDraftTweetAsync()`、`DeleteDraftTweetsAsync()` / `DeleteDraftTweetAsync()`、`PostDraftTweetAsync()` 以及 `DraftTweet` — 列出、保存（正文、媒体、引用 URL、回复对象）、删除和发布「未发送的帖子」中的草稿。X 没有专门的「发布草稿」API；与网页端一样，先发送普通的 CreateTweet，再删除草稿。
 - `SearchOptions` / `SearchQuery.Build` — 构建搜索查询。
@@ -226,7 +227,7 @@ dotnet test tests/Twikit.Tests -c Release
 ## 致谢
 
 - **[d60/twikit](https://github.com/d60/twikit)**（[@d60](https://github.com/d60)）— 原始实现，全部功劳归原作者所有。
-- **[PawiX25/twifork](https://github.com/PawiX25/twifork)**（[@PawiX25](https://github.com/PawiX25) 及贡献者们）— 2026 年的修复与 X Spaces 支持。
+- **[PawiX25/twifork](https://github.com/PawiX25/twifork)**（[@PawiX25](https://github.com/PawiX25) 及贡献者们）— 2026 年的修复与 X Spaces 支持（Python 分支已并入至提交 [47c8eff](https://github.com/PawiX25/twifork/commit/47c8eff9a4cffcacdd5a83a9778b3c0ed61090f9)，2026-10-09）。
 - **[amanetoki7/twikit](https://github.com/amanetoki7/twikit)** — 并入上述内容的 Python 分支，本仓库即由它移植而来。
 - **[iSarabjitDhiman/TweeterPy](https://github.com/iSarabjitDhiman/TweeterPy)** — `X-Client-Transaction-Id` 计算方法的来源。
 

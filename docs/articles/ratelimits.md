@@ -12,6 +12,8 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 このとき 15 分枠のカウンターはまだ約 250 リクエスト残っていると報告するため、レート制限ヘッダーを見張るだけでは事前に気付けません。
 読み取り・いいね・フォローは引き続き動作し、投稿だけが翌日まで（または Premium に加入するまで）ブロックされます。
 
+† `PinTweetAsync` と `UnpinTweetAsync` のレート制限ヘッダーは 187 リクエストの共有枠を示しますが、X が実際に適用するのはそれではありません。2 つはそれぞれ別に数えられ、枠内で **100 回** 呼ぶと `429` で止められます（`UnpinTweetAsync` が止まっても `PinTweetAsync` はまだ通り、ヘッダーは残り 87 と報告したままです）。`NotFoundException` で失敗した呼び出しも数えられ、`api.x.com` ではなく `x.com/i/api` を経由しても同じ制限に当たります。枠は固定で、最初の呼び出しから始まり、`x-rate-limit-reset` が示す枠の終わりでちょうど解除されます。間隔は関係なく、連続呼び出しでも 8 秒おきでも 101 回目で止められました。9 アカウント・24 枠で計測し、すべて 100 でした。
+
 直近のレスポンスに含まれる残りリクエスト数とリセット時刻は、`Client.RateLimitRemaining` と `Client.RateLimitReset` で確認できます。
 
 「上限」の `-` は未計測（不明）を表します。
@@ -70,6 +72,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | GetNotificationsAsync("All")              | 180   | notifications/all.json              |
 | GetNotificationsAsync("Mentions")         | 180   | notifications/mentions.json         |
 | GetNotificationsAsync("Verified")         | 180   | notifications/verified.json         |
+| PinTweetAsync                             | 100†  | account/pin_tweet.json              |
 | GetRetweetersAsync                        | 500   | Retweeters                          |
 | SearchTweetAsync, SearchUserAsync         | 50    | SearchTimeline                      |
 | SendDmAsync                               | 187   | dm/new2.json                        |
@@ -81,6 +84,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | UnblockUserAsync                          | 187   | blocks/destroy.json                 |
 | UnfavoriteTweetAsync                      | -     | UnfavoriteTweet                     |
 | UnmuteUserAsync                           | 187   | mutes/users/destroy.json            |
+| UnpinTweetAsync                           | 100†  | account/unpin_tweet.json            |
 | EditListAsync                             | -     | UpdateList                          |
 | UploadMediaAsync                          | -     | media/upload.json                   |
 | GetUserByIdAsync                          | 500   | UserByRestId                        |

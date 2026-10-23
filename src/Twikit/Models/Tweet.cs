@@ -417,6 +417,14 @@ public class Tweet : IEquatable<Tweet>
         return highlighted;
     }
 
+    /// <summary>自分のプロフィールにピン留めします。</summary>
+    /// <seealso cref="Client.PinTweetAsync"/>
+    public Task<HttpResponseMessage> PinAsync() => _client.PinTweetAsync(Id);
+
+    /// <summary>自分のプロフィールのピン留めを外します。</summary>
+    /// <seealso cref="Client.UnpinTweetAsync"/>
+    public Task<HttpResponseMessage> UnpinAsync() => _client.UnpinTweetAsync(Id);
+
     /// <summary>
     /// このツイートに返信します。
     /// </summary>

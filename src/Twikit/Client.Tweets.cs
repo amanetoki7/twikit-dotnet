@@ -1188,6 +1188,32 @@ public partial class Client
     }
 
     /// <summary>
+    /// ツイートを自分のプロフィールにピン留めします。
+    /// </summary>
+    /// <remarks>
+    /// プロフィールのピンは 1 件だけなので、別のツイートをピン留めすると現在のピンが置き換わります。
+    /// ピン留めできるのは自分のツイートだけで、他人のツイートに対して X は「status が見つからない」と答えます。
+    /// レート制限はヘッダーの値ではなく pin / unpin それぞれ 100 回です（docs/articles/ratelimits.md の脚注を参照）。
+    /// </remarks>
+    /// <param name="tweetId">ピン留めするツイートの ID。</param>
+    /// <exception cref="NotFoundException">ツイートが存在しない、または他のアカウントのもの。</exception>
+    /// <seealso cref="UnpinTweetAsync"/>
+    public async Task<HttpResponseMessage> PinTweetAsync(string tweetId)
+        => (await V11.PinTweetAsync(tweetId).ConfigureAwait(false)).Http;
+
+    /// <summary>
+    /// 自分のプロフィールのピン留めを外します。
+    /// </summary>
+    /// <remarks>
+    /// ピン留めされていないツイートを渡しても何も変えずに成功します。ピン留め中のツイートを削除すると
+    /// その ID は <see cref="User.PinnedTweetIds"/> に残り、その ID を渡すと消えます。
+    /// </remarks>
+    /// <param name="tweetId">ピン留めを外すツイートの ID。</param>
+    /// <seealso cref="PinTweetAsync"/>
+    public async Task<HttpResponseMessage> UnpinTweetAsync(string tweetId)
+        => (await V11.UnpinTweetAsync(tweetId).ConfigureAwait(false)).Http;
+
+    /// <summary>
     /// ブックマークを取得します。
     /// </summary>
     /// <param name="count">取得する件数。</param>

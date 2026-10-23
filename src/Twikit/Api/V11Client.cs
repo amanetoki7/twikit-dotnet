@@ -34,6 +34,8 @@ public static class V11Endpoint
     public static readonly string FriendsList = $"https://api.{D}/1.1/friends/list.json";
     public static readonly string FollowersIds = $"https://api.{D}/1.1/followers/ids.json";
     public static readonly string UpdateProfile = $"https://api.{D}/1.1/account/update_profile.json";
+    public static readonly string PinTweet = $"https://api.{D}/1.1/account/pin_tweet.json";
+    public static readonly string UnpinTweet = $"https://api.{D}/1.1/account/unpin_tweet.json";
     public static readonly string FriendsIds = $"https://api.{D}/1.1/friends/ids.json";
     public static readonly string DmNew = $"https://{D}/i/api/1.1/dm/new2.json";
     public static readonly string DmInbox = $"https://{D}/i/api/1.1/dm/inbox_initial_state.json";
@@ -313,6 +315,16 @@ public sealed class V11Client
         // mislabel this form body - X then parses no fields at all.
         return _base.PostAsync(V11Endpoint.UpdateProfile, new RequestOptions { Form = data, Headers = FormHeaders(_base.BaseHeaders) });
     }
+
+    public Task<ApiResponse> PinTweetAsync(string tweetId)
+        // The legacy pin endpoints take the tweet id under `id` (not
+        // `tweet_id`) and answer error 38 otherwise.
+        => _base.PostAsync(V11Endpoint.PinTweet, new RequestOptions { Form = PinForm(tweetId), Headers = FormHeaders(_base.BaseHeaders) });
+
+    public Task<ApiResponse> UnpinTweetAsync(string tweetId)
+        => _base.PostAsync(V11Endpoint.UnpinTweet, new RequestOptions { Form = PinForm(tweetId), Headers = FormHeaders(_base.BaseHeaders) });
+
+    private static Dictionary<string, string> PinForm(string tweetId) => new() { ["id"] = tweetId };
 
     public Task<ApiResponse> DmNewGroupAsync(IEnumerable<string> recipientIds, string text, string? mediaId)
     {

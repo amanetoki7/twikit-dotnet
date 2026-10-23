@@ -166,6 +166,7 @@ AUTH_TOKEN=... CT0=... dotnet run --project examples/Twikit.Examples -- basic
 - `Client.UpdateProfileAsync()`、`GetAboutAccountAsync()`、`GetUserSpotlightsAsync()`、`GetUserListsAsync()`、`GetMutedUsersAsync()`、`GetBlockedUsersAsync()`。
 - `Client.GetUserMentionsAsync()`、`SearchTweetsByDateAsync()`、`GetThreadAsync()`、`GetTweetByUrlAsync()`、`GetExplorePageAsync()`。
 - `Client.HighlightTweetAsync()`、`UnhighlightTweetAsync()`、`IsTweetHighlightedAsync()` と `Tweet.Highlighted` / `Tweet.HighlightAsync()` / `Tweet.UnhighlightAsync()` / `Tweet.IsHighlightedAsync()` — プロフィールの「ハイライト」タブへの追加・解除と、ハイライト済みかの確認（Premium 限定）。X はタイムラインにこのフラグを含めないため、`Tweet.Highlighted` は `GetUserHighlightsTweetsAsync()` で取得したツイートか、`IsHighlightedAsync()` を呼んだあとだけ値が入ります。`GetUserHighlightsTweetsAsync()` の query id / features も 2026-10 時点のものへ更新しました。
+- `Client.PinTweetAsync()`、`UnpinTweetAsync()` と `Tweet.PinAsync()` / `Tweet.UnpinAsync()` — プロフィールへのツイートのピン留めと解除（v1.1 `account/pin_tweet.json` / `unpin_tweet.json`）。ピンは 1 件だけで、別のツイートをピン留めすると置き換わります。他人のツイートは `NotFoundException`、ピン留めしていないツイートの解除は何もせず成功します。レート制限はヘッダーの値ではなく pin / unpin それぞれ 100 回で、詳細は [docs/articles/ratelimits.md](docs/articles/ratelimits.md) の脚注にあります。
 - `Client.GetOriginalContentRewardsEligibilityAsync()`、`GetCreatorSubscriptionsEligibilityAsync()` — クリエイタースタジオの「オリジナルコンテンツ報酬」「サブスクリプション」の参加条件一覧と達成状況（`CreatorEligibility` / `CreatorRequirement`: 条件文、達成済みか、現在値、進捗、注記）。X はこのページを GraphQL ではなく server-driven UI（`/i/jfapi/`、text/plain の生バイナリ）で返すため、そのデコーダ（`Client.Jetfuel` で他のページも取得可）も含みます。
 - `Client.GetDraftTweetsAsync()`、`CreateDraftTweetAsync()`、`DeleteDraftTweetsAsync()` / `DeleteDraftTweetAsync()`、`PostDraftTweetAsync()` と `DraftTweet` — 「未送信ポスト」の下書きの一覧・保存（本文、メディア、引用 URL、返信先）・削除・投稿。X に下書き投稿専用の API は無く、Web クライアントと同じく通常の CreateTweet を送ってから下書きを削除します。
 - `SearchOptions` / `SearchQuery.Build` — 検索クエリの組み立て。
@@ -226,7 +227,7 @@ dotnet test tests/Twikit.Tests -c Release
 ## クレジット
 
 - **[d60/twikit](https://github.com/d60/twikit)**（[@d60](https://github.com/d60)）— 元になる実装。功績はすべて原作者に帰属します。
-- **[PawiX25/twifork](https://github.com/PawiX25/twifork)**（[@PawiX25](https://github.com/PawiX25) とコントリビューターの皆さん）— 2026 年時点の不具合修正と X スペース対応。
+- **[PawiX25/twifork](https://github.com/PawiX25/twifork)**（[@PawiX25](https://github.com/PawiX25) とコントリビューターの皆さん）— 2026 年時点の不具合修正と X スペース対応（Python 版が取り込み済みの最新コミット: [47c8eff](https://github.com/PawiX25/twifork/commit/47c8eff9a4cffcacdd5a83a9778b3c0ed61090f9)、2026-10-09）。
 - **[amanetoki7/twikit](https://github.com/amanetoki7/twikit)** — 上記を取り込んだ Python 版。このリポジトリはそれを移植したものです。
 - **[iSarabjitDhiman/TweeterPy](https://github.com/iSarabjitDhiman/TweeterPy)** — `X-Client-Transaction-Id` の計算の由来。
 - すきくん **[八雲ゆかり](https://x.com/yukari_557fd8) さま** ([@yukari-557fd8](https://github.com/yukari-557fd8)) - 公式APIしか使ったことないわたしを救ってくれた。このリポジトリがうまれるきっかけにもなりました。
