@@ -29,6 +29,7 @@ C# 版は Python 版（`twikit` 2.4.0）の構造をそのまま移植してい�
 | `tweet.highlighted` / `await tweet.is_highlighted()` | `tweet.Highlighted`（`bool?`）/ `await tweet.IsHighlightedAsync()` |
 | `client.pin_tweet(id)` / `unpin_tweet(id)` | `client.PinTweetAsync(id)` / `client.UnpinTweetAsync(id)` |
 | `await tweet.pin()` / `await tweet.unpin()` | `await tweet.PinAsync()` / `await tweet.UnpinAsync()` |
+| `client.translate_tweet(id, dst_lang)` / `await tweet.translate(dst_lang)` | `client.TranslateTweetAsync(id, dstLang)` / `await tweet.TranslateAsync(dstLang)`（`TweetTranslation`、`.Text` が翻訳文） |
 | `client.get_draft_tweets()` / `create_draft_tweet(text)` / `delete_draft_tweets(ids)` | `client.GetDraftTweetsAsync()` / `CreateDraftTweetAsync(text)` / `DeleteDraftTweetsAsync(ids)` |
 | `client.post_draft_tweet(draft)` / `await draft.post()` | `client.PostDraftTweetAsync(draft)` / `await draft.PostAsync()` |
 | `client.get_community_notes(tweet_id)` / `await tweet.get_community_notes()` | `client.GetCommunityNotesAsync(tweetId)` / `await tweet.GetCommunityNotesAsync()` |

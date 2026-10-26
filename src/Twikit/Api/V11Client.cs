@@ -37,6 +37,12 @@ public static class V11Endpoint
     public static readonly string PinTweet = $"https://api.{D}/1.1/account/pin_tweet.json";
     public static readonly string UnpinTweet = $"https://api.{D}/1.1/account/unpin_tweet.json";
     public static readonly string FriendsIds = $"https://api.{D}/1.1/friends/ids.json";
+    /// <summary>
+    /// Grok によるポストの翻訳（「ポストを翻訳」ボタン）。改行区切りの JSON を返します:
+    /// (ポスト, 言語) の組を初めて要求したときは生成されたトークンごとに 1 行、X にキャッシュがあれば
+    /// 全文と <c>entities</c> を含む 1 行だけです。
+    /// </summary>
+    public static readonly string GrokTranslation = $"https://api.{D}/2/grok/translation.json";
     public static readonly string DmNew = $"https://{D}/i/api/1.1/dm/new2.json";
     public static readonly string DmInbox = $"https://{D}/i/api/1.1/dm/inbox_initial_state.json";
     public static string DmInboxTimeline(string name) => $"https://{D}/i/api/1.1/dm/inbox_timeline/{name}.json";
@@ -325,6 +331,23 @@ public sealed class V11Client
         => _base.PostAsync(V11Endpoint.UnpinTweet, new RequestOptions { Form = PinForm(tweetId), Headers = FormHeaders(_base.BaseHeaders) });
 
     private static Dictionary<string, string> PinForm(string tweetId) => new() { ["id"] = tweetId };
+
+    public Task<ApiResponse> GrokTranslationAsync(string contentType, string id, string dstLang)
+        // The web client sends the JSON body as text/plain; X accepts
+        // application/json (the base header) just the same, and no Origin
+        // header is needed. The body is a stream of JSON lines, so callers
+        // read ApiResponse.Text - Json is null for anything but a cached
+        // single-line answer.
+        => _base.PostAsync(V11Endpoint.GrokTranslation, new RequestOptions
+        {
+            Json = new JsonObject
+            {
+                ["content_type"] = contentType,
+                ["id"] = id,
+                ["dst_lang"] = dstLang,
+            },
+            Headers = _base.BaseHeaders,
+        });
 
     public Task<ApiResponse> DmNewGroupAsync(IEnumerable<string> recipientIds, string text, string? mediaId)
     {

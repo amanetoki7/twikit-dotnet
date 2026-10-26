@@ -118,6 +118,21 @@ await tweet.PinAsync();
 await tweet.UnpinAsync();
 ```
 
+### Grok で翻訳する
+
+「ポストを翻訳」ボタンと同じ `api.x.com/2/grok/translation.json` を呼びます。(ツイート, 言語) の組を初めて要求したときは
+X が翻訳をトークンごとにストリームし（0.5 秒ほどで完了）、以後は X のキャッシュから全文が 1 回で返ります
+（`TweetTranslation.Cached`）。`dstLang` を省略するとクライアントの言語の主タグ（`ja-JP` なら `ja`）になります。
+X は言語コードを検証しないので、未知のコードでも Grok が推測した言語で返ってきます。レート制限は 15 分あたり 100 回です。
+
+```csharp
+var translation = await client.TranslateTweetAsync("2114550616811094253", "ja");
+Console.WriteLine(translation.Text);      // 私は完全にあなたの虜です。
+
+var tweet = await client.GetTweetByIdAsync("2114547734862803416");
+var english = await tweet.TranslateAsync("en");
+```
+
 ### クリエイター収益化の参加条件（Premium）
 
 クリエイタースタジオの「オリジナルコンテンツ報酬」「サブスクリプション」ページにある参加条件の一覧と、

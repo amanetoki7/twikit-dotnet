@@ -425,6 +425,11 @@ public class Tweet : IEquatable<Tweet>
     /// <seealso cref="Client.UnpinTweetAsync"/>
     public Task<HttpResponseMessage> UnpinAsync() => _client.UnpinTweetAsync(Id);
 
+    /// <summary>Grok でこのツイートを翻訳します。</summary>
+    /// <param name="dstLang">翻訳先の言語コード。省略時はクライアントの言語。</param>
+    /// <seealso cref="Client.TranslateTweetAsync"/>
+    public Task<TweetTranslation> TranslateAsync(string? dstLang = null) => _client.TranslateTweetAsync(Id, dstLang);
+
     /// <summary>この投稿に提案されたコミュニティノートをすべて取得します。</summary>
     /// <seealso cref="Client.GetCommunityNotesAsync"/>
     public Task<List<CommunityNote>> GetCommunityNotesAsync() => _client.GetCommunityNotesAsync(Id);
@@ -609,6 +614,58 @@ public sealed class DraftTweet
     public Task<Tweet> PostAsync() => _client.PostDraftTweetAsync(this);
 
     public override string ToString() => $"<DraftTweet id=\"{Id}\">";
+}
+
+/// <summary>
+/// Grok によるポストの翻訳（<c>api.x.com/2/grok/translation.json</c>）。<see cref="Client.TranslateTweetAsync"/> が返します。
+/// </summary>
+public sealed class TweetTranslation
+{
+    /// <summary>翻訳したツイートの ID。</summary>
+    public string TweetId { get; }
+    /// <summary>要求した言語コード。</summary>
+    public string DstLang { get; }
+    /// <summary>翻訳文。</summary>
+    public string Text { get; }
+    /// <summary>
+    /// X が翻訳に付けたエンティティ。X がキャッシュから返したときだけ入り、生成直後の翻訳では空です。
+    /// </summary>
+    public JsonObject Entities { get; }
+    /// <summary>ツイートなら <c>POST</c>。</summary>
+    public string? ContentType { get; }
+    /// <summary>
+    /// X が全文を 1 回で返したとき true（この翻訳を既に持っていた）、トークンごとにストリームしたとき false。
+    /// </summary>
+    public bool Cached { get; }
+    /// <summary>応答本文そのまま（改行区切りの JSON）。</summary>
+    public string Raw { get; }
+
+    public TweetTranslation(string tweetId, string dstLang, string raw)
+    {
+        TweetId = tweetId;
+        DstLang = dstLang;
+        Raw = raw;
+        var text = new System.Text.StringBuilder();
+        var entities = new JsonObject();
+        string? contentType = null;
+        var chunks = 0;
+        foreach (var rawLine in raw.Split('\n'))
+        {
+            var line = rawLine.Trim();
+            if (line.Length == 0) continue;
+            var result = JsonNode.Parse(line).Sub("result");
+            text.Append(result.Str("text") ?? "");
+            chunks++;
+            if (result.Str("content_type") is { } ct) contentType = ct;
+            if (result.Obj("entities") is { Count: > 0 } ent) entities = (JsonObject)ent.DeepClone();
+        }
+        Text = text.ToString();
+        Entities = entities;
+        ContentType = contentType;
+        Cached = chunks == 1;
+    }
+
+    public override string ToString() => $"<TweetTranslation tweet_id=\"{TweetId}\" dst_lang=\"{DstLang}\">";
 }
 
 /// <summary>削除済みなどで表示できないツイートの墓石。</summary>

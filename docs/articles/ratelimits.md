@@ -79,6 +79,7 @@ Authorization: You've hit the daily limit. Subscribe to Premium for higher limit
 | GetNotificationsAsync("Mentions")         | 180   | notifications/mentions.json         |
 | GetNotificationsAsync("Verified")         | 180   | notifications/verified.json         |
 | PinTweetAsync                             | 100†  | account/pin_tweet.json              |
+| TranslateTweetAsync                       | 100   | grok/translation.json               |
 | GetRetweetersAsync                        | 500   | Retweeters                          |
 | SearchTweetAsync, SearchUserAsync         | 50    | SearchTimeline                      |
 | SendDmAsync                               | 187   | dm/new2.json                        |

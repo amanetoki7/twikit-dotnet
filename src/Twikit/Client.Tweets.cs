@@ -1214,6 +1214,29 @@ public partial class Client
         => (await V11.UnpinTweetAsync(tweetId).ConfigureAwait(false)).Http;
 
     /// <summary>
+    /// Grok でツイートを翻訳します（「ポストを翻訳」ボタンの <c>api.x.com/2/grok/translation.json</c>）。
+    /// </summary>
+    /// <remarks>
+    /// (ツイート, 言語) の組を初めて要求したとき X は翻訳をトークンごとにストリームし、この呼び出しはストリームが
+    /// 終わってから返ります（0.5 秒ほど）。以後はどのアカウントからでも X のキャッシュから全文が 1 回で返ります。
+    /// <see cref="Tweet.IsTranslatable"/> や元の言語と翻訳先が同じかは確認しません。X はそれでも翻訳します。
+    /// </remarks>
+    /// <param name="tweetId">ツイートの ID。</param>
+    /// <param name="dstLang">
+    /// 翻訳先の言語コード（<c>ja</c>、<c>en</c>、<c>fi</c> ...）。省略時は <see cref="Language"/> の主タグ
+    /// （<c>en-US</c> なら <c>en</c>）。X はコードを検証せず、未知のコードでも 200 で Grok が推測した言語の訳を返します。
+    /// </param>
+    /// <returns><see cref="TweetTranslation"/>。<see cref="TweetTranslation.Text"/> が翻訳文です。</returns>
+    /// <exception cref="ServerErrorException">存在しないツイート ID（X は 500、code 131 を返します）。</exception>
+    /// <seealso cref="Tweet.TranslateAsync"/>
+    public async Task<TweetTranslation> TranslateTweetAsync(string tweetId, string? dstLang = null)
+    {
+        dstLang ??= (Language ?? "en").Split('-')[0];
+        var response = await V11.GrokTranslationAsync("POST", tweetId, dstLang).ConfigureAwait(false);
+        return new TweetTranslation(tweetId, dstLang, response.Text);
+    }
+
+    /// <summary>
     /// ブックマークを取得します。
     /// </summary>
     /// <param name="count">取得する件数。</param>
